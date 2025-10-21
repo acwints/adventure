@@ -73,7 +73,7 @@ async function decodeAudioData(
 // --- API Functions ---
 
 export async function generateLesson(topic: string): Promise<Lesson> {
-    const TIMEOUT = 30000; // 30 seconds
+    const TIMEOUT = 60000; // 60 seconds
     const lessonPromise = (async () => {
         const prompt = `You are an expert educator creating an engaging lesson for a middle school student. The topic is "${topic}".
         Create an exciting lesson that sounds like an adventure.
@@ -82,21 +82,22 @@ export async function generateLesson(topic: string): Promise<Lesson> {
         Return the response as a JSON object with the keys "title", "content", and "relatedTopics" (an array of strings).`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.5-pro',
             contents: prompt,
             config: {
-            responseMimeType: 'application/json',
-            responseSchema: {
-                type: Type.OBJECT,
-                properties: {
-                title: { type: Type.STRING },
-                content: { type: Type.STRING },
-                relatedTopics: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING },
+                responseMimeType: 'application/json',
+                responseSchema: {
+                    type: Type.OBJECT,
+                    properties: {
+                    title: { type: Type.STRING },
+                    content: { type: Type.STRING },
+                    relatedTopics: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING },
+                    },
+                    },
                 },
-                },
-            },
+                thinkingConfig: { thinkingBudget: 0 },
             },
         });
 
@@ -107,7 +108,7 @@ export async function generateLesson(topic: string): Promise<Lesson> {
 }
 
 export async function generateQuiz(lessonContent: string): Promise<QuizQuestion[]> {
-    const TIMEOUT = 30000; // 30 seconds
+    const TIMEOUT = 60000; // 60 seconds
     const quizPromise = (async () => {
         const prompt = `Based on the following lesson content, create a multiple-choice quiz with 3 questions to test understanding. Each question should have 4 possible answers, with only one being correct. Ensure the correctAnswer exactly matches one of the strings in the options array.
         
@@ -115,25 +116,26 @@ export async function generateQuiz(lessonContent: string): Promise<QuizQuestion[
         ${lessonContent}`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.5-pro',
             contents: prompt,
             config: {
-            responseMimeType: 'application/json',
-            responseSchema: {
-                type: Type.ARRAY,
-                items: {
-                type: Type.OBJECT,
-                properties: {
-                    question: { type: Type.STRING },
-                    options: {
+                responseMimeType: 'application/json',
+                responseSchema: {
                     type: Type.ARRAY,
-                    items: { type: Type.STRING },
+                    items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        question: { type: Type.STRING },
+                        options: {
+                        type: Type.ARRAY,
+                        items: { type: Type.STRING },
+                        },
+                        correctAnswer: { type: Type.STRING },
                     },
-                    correctAnswer: { type: Type.STRING },
+                    required: ['question', 'options', 'correctAnswer'],
+                    },
                 },
-                required: ['question', 'options', 'correctAnswer'],
-                },
-            },
+                thinkingConfig: { thinkingBudget: 0 },
             },
         });
 

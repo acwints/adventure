@@ -2,11 +2,15 @@ import React, { useState, useCallback, useEffect } from 'react';
 import TopicSelector from './components/TopicSelector';
 import LessonView from './components/LessonView';
 import QuizView from './components/QuizView';
+import LoginView from './components/LoginView';
 import { CompassIcon, LoadingSpinner } from './components/Icons';
 import { generateLesson, generateQuiz } from './services/geminiService';
-import type { Lesson, QuizQuestion, AppStatus, View } from './types';
+import { onAuthStateChanged, signOutUser, isFirebaseEnabled } from './services/firebase';
+import type { Lesson, QuizQuestion, AppStatus, View, User } from './types';
 
 const App: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [topic, setTopic] = useState<string | null>(null);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null);
@@ -14,6 +18,14 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentView, setCurrentView] = useState<View>('learn');
   const [loadingMessage, setLoadingMessage] = useState<string>('');
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged((user) => {
+      setUser(user);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
   
   const handleTopicSelect = useCallback((selectedTopic: string) => {
     setTopic(selectedTopic);
@@ -43,7 +55,11 @@ const App: React.FC = () => {
         console.error(err);
         let errorMessage = 'An unknown error occurred.';
         if (err instanceof Error) {
-            errorMessage = `Failed to generate adventure. ${err.message}`;
+            if (err.message.includes('took too long')) {
+                errorMessage = "The AI is taking a while to respond. This can happen with complex topics. Please try again, or perhaps explore a different topic!";
+            } else {
+                errorMessage = `Failed to generate adventure. ${err.message}`;
+            }
         }
         setError(errorMessage);
         setStatus('error');
@@ -63,7 +79,7 @@ const App: React.FC = () => {
     setLoadingMessage('');
   };
   
-  const renderContent = () => {
+  const renderAppContent = () => {
     switch (status) {
       case 'loading':
         return (
@@ -100,27 +116,50 @@ const App: React.FC = () => {
             );
         }
         return null;
-      default:
-        return null;
+      default: // 'idle'
+        return <TopicSelector onTopicSelect={handleTopicSelect} isLoading={false} />;
     }
   };
 
+  if (authLoading && isFirebaseEnabled) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner className="w-16 h-16 text-cyan-400" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 font-sans p-4 sm:p-8 flex flex-col items-center">
-      <header className="w-full max-w-4xl text-center mb-8">
-        <div className="flex items-center justify-center gap-4">
-          <CompassIcon className="w-12 h-12 text-cyan-400"/>
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">
-            Adventure AI
-          </h1>
+      <header className="w-full max-w-4xl mb-8">
+        <div className="flex items-center justify-between">
+            <div className="flex items-center justify-center gap-4">
+                <CompassIcon className="w-12 h-12 text-cyan-400"/>
+                <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">
+                    Adventure AI
+                </h1>
+            </div>
+            {isFirebaseEnabled && user && (
+                <div className="flex items-center gap-4">
+                    <span className="text-slate-300 hidden sm:block">Welcome, {user.displayName?.split(' ')[0]}</span>
+                    {user.photoURL && <img src={user.photoURL} alt="User profile" className="w-10 h-10 rounded-full" />}
+                    <button onClick={signOutUser} className="bg-slate-700 text-slate-200 py-2 px-4 rounded-lg hover:bg-slate-600 transition duration-300">
+                        Sign Out
+                    </button>
+                </div>
+            )}
         </div>
-        <p className="text-slate-400 mt-2">Your personal AI guide to the wonders of knowledge.</p>
+        <p className="text-slate-400 mt-2 text-left">Your personal AI guide to the wonders of knowledge.</p>
       </header>
       
       <main className="w-full max-w-4xl">
-        {/* FIX: The TopicSelector is only rendered when status is 'idle', so `isLoading` should be false.
-            The comparison `status === 'loading'` would always be false here, causing a TypeScript error. */}
-        {status === 'idle' ? <TopicSelector onTopicSelect={handleTopicSelect} isLoading={false} /> : renderContent()}
+        {!isFirebaseEnabled ? (
+          renderAppContent()
+        ) : !user ? (
+          <LoginView />
+        ) : (
+          renderAppContent()
+        )}
       </main>
     </div>
   );
