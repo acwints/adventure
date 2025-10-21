@@ -96,6 +96,7 @@ export async function generateLesson(topic: string): Promise<Lesson> {
                         items: { type: Type.STRING },
                     },
                     },
+                    required: ['title', 'content', 'relatedTopics'],
                 },
             },
         });
