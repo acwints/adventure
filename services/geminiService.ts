@@ -97,7 +97,6 @@ export async function generateLesson(topic: string): Promise<Lesson> {
                     },
                     },
                 },
-                thinkingConfig: { thinkingBudget: 0 },
             },
         });
 
@@ -135,7 +134,6 @@ export async function generateQuiz(lessonContent: string): Promise<QuizQuestion[
                     required: ['question', 'options', 'correctAnswer'],
                     },
                 },
-                thinkingConfig: { thinkingBudget: 0 },
             },
         });
 
