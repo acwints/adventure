@@ -1,0 +1,5 @@
+{
+  "name": "Adventure AI",
+  "description": "An educational tool that uses generative AI to teach students about various topics through engaging text, audio, and interactive quizzes, framed as an exciting adventure in learning.",
+  "requestFramePermissions": []
+}
