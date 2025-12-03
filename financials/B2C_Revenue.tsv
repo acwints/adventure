@@ -1,0 +1,77 @@
+Adventure AI - B2C Revenue Model	Price	% of Revenue	Cost to Deliver	Margin								
+Premium Monthly	 $ 7.99 	23%	 $ 1.60 	 $ 6.39 								
+Premium Annual	 $ 59.99 	46%	 $ 12.00 	 $ 47.99 								
+Family Plan	 $ 14.99 	0%	 $ 3.00 	 $ 11.99 								
+Advertising (CPM)	 $ 4.00 	31%	 $ 0.40 	 $ 3.60 								
+In-App Purchases	 $ 2.99 	3%	 $ 0.60 	 $ 2.39 								
+Average Revenue Per User	 $ 3.48 											
+Average Gross Margin	72%											
+												
+FREEMIUM SUBSCRIPTIONS												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Free Users (MAU)	200	350	500	800	1,200	2,000	3,000	4,000	5,000	6,500	8,000	10,000
+New Free Signups	200	175	200	400	500	1,000	1,200	1,200	1,400	2,000	2,000	2,500
+Free User Growth MoM	0%	75%	43%	60%	50%	67%	50%	33%	25%	30%	23%	25%
+Premium Conversion Rate	2%	2.5%	3%	3%	3.5%	4%	4%	4.5%	5%	5%	5.5%	6%
+Premium Monthly Subs	4	9	15	24	42	80	120	180	250	325	440	600
+Premium Annual Subs	0	2	5	10	18	30	50	70	100	130	165	200
+Monthly Premium Revenue	 $ 32 	 $ 72 	 $ 120 	 $ 192 	 $ 335 	 $ 639 	 $ 958 	 $ 1,438 	 $ 1,998 	 $ 2,597 	 $ 3,516 	 $ 4,794 
+Annual Premium Revenue	 $ -   	 $ 120 	 $ 300 	 $ 600 	 $ 1,080 	 $ 1,800 	 $ 3,000 	 $ 4,200 	 $ 6,000 	 $ 7,800 	 $ 9,900 	 $ 12,000 
+Total Subscription Revenue	 $ 32 	 $ 192 	 $ 420 	 $ 792 	 $ 1,415 	 $ 2,439 	 $ 3,958 	 $ 5,638 	 $ 7,998 	 $ 10,397 	 $ 13,416 	 $ 16,794 
+												
+ADVERTISING REVENUE												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Ad-Supported Free Users	196	341	485	776	1,158	1,920	2,880	3,820	4,750	6,175	7,560	9,400
+Sessions Per User/Month	6	6	7	7	8	8	8	9	9	10	10	10
+Ad Impressions/Session	4	4	5	5	5	5	5	5	5	5	5	5
+Monthly Ad Impressions	4,704	8,184	16,975	27,160	46,320	76,800	115,200	171,900	213,750	308,750	378,000	470,000
+CPM Rate	 $ 3.00 	 $ 3.00 	 $ 3.25 	 $ 3.25 	 $ 3.50 	 $ 3.50 	 $ 3.75 	 $ 4.00 	 $ 4.00 	 $ 4.25 	 $ 4.50 	 $ 4.50 
+Monthly Ad Revenue	 $ 14 	 $ 25 	 $ 55 	 $ 88 	 $ 162 	 $ 269 	 $ 432 	 $ 688 	 $ 855 	 $ 1,312 	 $ 1,701 	 $ 2,115 
+Total Advertising Revenue	 $ 14 	 $ 25 	 $ 55 	 $ 88 	 $ 162 	 $ 269 	 $ 432 	 $ 688 	 $ 855 	 $ 1,312 	 $ 1,701 	 $ 2,115 
+												
+IN-APP PURCHASES												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Cosmetic Buyers (% MAU)	0%	0%	0.5%	0.5%	0.8%	1%	1%	1%	1%	1%	1%	1%
+Avg Purchase Price	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 	 $ 2.99 
+Cosmetic Revenue	 $ -   	 $ -   	 $ 7 	 $ 12 	 $ 29 	 $ 60 	 $ 90 	 $ 120 	 $ 150 	 $ 194 	 $ 239 	 $ 299 
+Content Pack Buyers	0	0	0	0	0	0	0	5	10	15	20	25
+Content Pack Price	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 	 $ 4.99 
+Content Pack Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 25 	 $ 50 	 $ 75 	 $ 100 	 $ 125 
+Total IAP Revenue	 $ -   	 $ -   	 $ 7 	 $ 12 	 $ 29 	 $ 60 	 $ 90 	 $ 145 	 $ 200 	 $ 269 	 $ 339 	 $ 424 
+												
+REVENUE SUMMARY												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Subscriptions	 $ 32 	 $ 192 	 $ 420 	 $ 792 	 $ 1,415 	 $ 2,439 	 $ 3,958 	 $ 5,638 	 $ 7,998 	 $ 10,397 	 $ 13,416 	 $ 16,794 
+Advertising	 $ 14 	 $ 25 	 $ 55 	 $ 88 	 $ 162 	 $ 269 	 $ 432 	 $ 688 	 $ 855 	 $ 1,312 	 $ 1,701 	 $ 2,115 
+In-App Purchases	 $ -   	 $ -   	 $ 7 	 $ 12 	 $ 29 	 $ 60 	 $ 90 	 $ 145 	 $ 200 	 $ 269 	 $ 339 	 $ 424 
+TOTAL MONTHLY REVENUE	 $ 46 	 $ 217 	 $ 482 	 $ 892 	 $ 1,606 	 $ 2,768 	 $ 4,480 	 $ 6,471 	 $ 9,053 	 $ 11,978 	 $ 15,456 	 $ 19,333 
+MoM Growth	0%	372%	122%	85%	80%	72%	62%	44%	40%	32%	29%	25%
+												
+Cost to Deliver (20%)	 $ 9 	 $ 43 	 $ 96 	 $ 178 	 $ 321 	 $ 554 	 $ 896 	 $ 1,294 	 $ 1,811 	 $ 2,396 	 $ 3,091 	 $ 3,867 
+Platform Fees (App Store 15%)	 $ 5 	 $ 29 	 $ 64 	 $ 121 	 $ 217 	 $ 375 	 $ 607 	 $ 868 	 $ 1,230 	 $ 1,600 	 $ 2,063 	 $ 2,583 
+Payment Processing (3%)	 $ 1 	 $ 7 	 $ 14 	 $ 27 	 $ 48 	 $ 83 	 $ 134 	 $ 194 	 $ 272 	 $ 359 	 $ 464 	 $ 580 
+Total Costs	 $ 15 	 $ 79 	 $ 175 	 $ 326 	 $ 586 	 $ 1,011 	 $ 1,638 	 $ 2,356 	 $ 3,312 	 $ 4,355 	 $ 5,618 	 $ 7,030 
+Net Margin	67%	64%	64%	63%	64%	63%	63%	64%	63%	64%	64%	64%
+Net Income	 $ 31 	 $ 138 	 $ 307 	 $ 566 	 $ 1,020 	 $ 1,757 	 $ 2,842 	 $ 4,115 	 $ 5,741 	 $ 7,623 	 $ 9,838 	 $ 12,303 
+												
+CUMULATIVE TOTALS												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Total Revenue (Cumulative)	 $ 46 	 $ 263 	 $ 745 	 $ 1,637 	 $ 3,243 	 $ 6,011 	 $ 10,491 	 $ 16,962 	 $ 26,015 	 $ 37,993 	 $ 53,449 	 $ 72,782 
+Total Net Income (Cumulative)	 $ 31 	 $ 169 	 $ 476 	 $ 1,042 	 $ 2,062 	 $ 3,819 	 $ 6,661 	 $ 10,776 	 $ 16,517 	 $ 24,140 	 $ 33,978 	 $ 46,281 
+												
+QUARTERLY SUMMARY	Q1 2025	Q2 2025	Q3 2025	Q4 2025	FY 2025						
+Total Revenue	 $ 745 	 $ 5,266 	 $ 20,004 	 $ 46,767 	 $ 72,782 						
+Total Net Income	 $ 476 	 $ 3,343 	 $ 12,698 	 $ 29,764 	 $ 46,281 						
+MoM Growth (Avg)	164%	79%	49%	29%	-						
+												
+KEY METRICS												
+Year 1 Total Revenue	 $ 72,782 											
+Year 1 Net Income	 $ 46,281 											
+Monthly Active Users (Dec)	10,000											
+Premium Conversion Rate (Dec)	6%											
+Average Revenue Per User	 $ 3.48 											
+Gross Margin	64%											
+Customer Acquisition Cost	 $ 4.99 											
+Lifetime Value (Premium)	 $ 84 											
+LTV:CAC Ratio	17:1											
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import TitleScreen from './components/TitleScreen';
 import LoginView from './components/LoginView';
 import WorldMap from './components/WorldMap';
@@ -13,13 +13,27 @@ import { generateLesson, generateQuiz } from './services/geminiService';
 
 const App: React.FC = () => {
   const { state, actions } = useGameState();
+  
+  // Track if we're currently fetching to prevent duplicate requests
+  const isFetchingRef = useRef(false);
+  const lastTopicRef = useRef<string | null>(null);
 
   // Generate lesson content when quest starts
   useEffect(() => {
+    // Guard: only fetch if we have a topic and are in generating state
     if (!state.activeTopic || !state.isGeneratingContent) return;
+    
+    // Guard: don't fetch if we already have content
     if (state.activeLesson && state.activeQuiz) return;
+    
+    // Guard: don't fetch if already fetching or if we already fetched this topic
+    if (isFetchingRef.current) return;
+    if (lastTopicRef.current === state.activeTopic) return;
 
     const fetchContent = async () => {
+      isFetchingRef.current = true;
+      lastTopicRef.current = state.activeTopic;
+      
       try {
         actions.setLoadingMessage(`Summoning knowledge about ${state.activeTopic}...`);
         const lessonData = await generateLesson(state.activeTopic!);
@@ -39,11 +53,21 @@ const App: React.FC = () => {
           }
         }
         actions.setContentError(errorMessage);
+      } finally {
+        isFetchingRef.current = false;
       }
     };
 
     fetchContent();
-  }, [state.activeTopic, state.isGeneratingContent, state.activeLesson, state.activeQuiz, actions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.activeTopic, state.isGeneratingContent]);
+
+  // Reset the topic ref when returning to map (so user can retry same topic)
+  useEffect(() => {
+    if (state.currentView === 'world_map') {
+      lastTopicRef.current = null;
+    }
+  }, [state.currentView]);
 
   // Handle login
   const handleLogin = useCallback(async (email: string, password: string) => {

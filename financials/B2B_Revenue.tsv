@@ -1,0 +1,79 @@
+Adventure AI - B2B Revenue Model	Price	% of Revenue	Cost to Deliver	Margin								
+School Subscription (Small)	 $ 1,500 	23%	 $ 300 	 $ 1,200 								
+School Subscription (Medium)	 $ 4,000 	14%	 $ 800 	 $ 3,200 								
+School Subscription (Large)	 $ 8,000 	0%	 $ 1,600 	 $ 6,400 								
+District License (Small)	 $ 25,000 	18%	 $ 5,000 	 $ 20,000 								
+White-Label Licensing	 $ 50,000 	36%	 $ 10,000 	 $ 40,000 								
+Professional Services	 $ 5,000 	9%	 $ 2,000 	 $ 3,000 								
+Average Revenue per Deal	 $ 8,558 											
+Average Gross Margin	80%											
+												
+SCHOOL SUBSCRIPTIONS												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Pilot Programs (Active)	0	0	2	3	5	6	7	8	8	6	4	2
+New Pilots Started	0	0	2	1	2	1	1	1	0	0	0	0
+Pilots Converted to Paid	0	0	0	0	0	0	1	1	2	2	3	4
+Small Schools (Cumulative Paid)	0	0	0	0	0	0	1	2	3	4	6	8
+Medium Schools (Cumulative Paid)	0	0	0	0	0	0	0	0	1	2	3	5
+Small School Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 125 	 $ 250 	 $ 375 	 $ 500 	 $ 750 	 $ 1,000 
+Medium School Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 333 	 $ 667 	 $ 1,000 	 $ 1,667 
+Total School Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 125 	 $ 250 	 $ 708 	 $ 1,167 	 $ 1,750 	 $ 2,667 
+												
+DISTRICT SUBSCRIPTIONS												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+District Pilots (Active)	0	0	0	1	1	2	2	2	2	2	2	1
+New District Pilots	0	0	0	1	0	1	0	0	0	0	0	0
+Districts Converted to Paid	0	0	0	0	0	0	0	0	0	0	0	1
+Paid Districts (Cumulative)	0	0	0	0	0	0	0	0	0	0	0	1
+District Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 12,500 
+Total District Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 12,500 
+												
+EDTECH PARTNERSHIPS												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+LMS Integration Partners	0	0	0	0	0	0	1	1	1	1	1	2
+Active Users via Partners	0	0	0	0	0	0	50	100	200	300	400	500
+Revenue Share ($2/user/yr)	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 8 	 $ 17 	 $ 33 	 $ 50 	 $ 67 	 $ 83 
+White-Label Discussions	0	0	0	1	1	2	2	2	2	2	2	1
+White-Label Deals Signed	0	0	0	0	0	0	0	0	0	0	0	1
+White-Label Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 50,000 
+Total Partnership Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 8 	 $ 17 	 $ 33 	 $ 50 	 $ 67 	 $ 50,083 
+												
+PROFESSIONAL SERVICES												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Custom Content Projects	0	0	0	0	0	0	0	0	1	1	1	2
+Average Project Fee	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 5,000 	 $ -   	 $ -   	 $ 5,000 
+Training Workshops	0	0	0	0	0	0	0	0	1	1	2	2
+Workshop Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 1,000 	 $ 1,000 	 $ 2,000 	 $ 2,000 
+Total Prof Services Revenue	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 6,000 	 $ 1,000 	 $ 2,000 	 $ 7,000 
+												
+REVENUE SUMMARY												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+School Subscriptions	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 125 	 $ 250 	 $ 708 	 $ 1,167 	 $ 1,750 	 $ 2,667 
+District Subscriptions	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 12,500 
+EdTech Partnerships	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 8 	 $ 17 	 $ 33 	 $ 50 	 $ 67 	 $ 50,083 
+Professional Services	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 6,000 	 $ 1,000 	 $ 2,000 	 $ 7,000 
+TOTAL MONTHLY REVENUE	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 133 	 $ 267 	 $ 6,742 	 $ 2,217 	 $ 3,817 	 $ 72,250 
+												
+Cost to Deliver (20%)	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 27 	 $ 53 	 $ 1,348 	 $ 443 	 $ 763 	 $ 14,450 
+Transaction Fees (3%)	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 4 	 $ 8 	 $ 202 	 $ 67 	 $ 115 	 $ 2,168 
+Total Costs	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 31 	 $ 61 	 $ 1,551 	 $ 510 	 $ 878 	 $ 16,618 
+Net Margin	0%	0%	0%	0%	0%	0%	77%	77%	77%	77%	77%	77%
+Net Income	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 103 	 $ 206 	 $ 5,191 	 $ 1,707 	 $ 2,939 	 $ 55,633 
+												
+CUMULATIVE TOTALS												
+Metric	Jan-25	Feb-25	Mar-25	Apr-25	May-25	Jun-25	Jul-25	Aug-25	Sep-25	Oct-25	Nov-25	Dec-25
+Total Revenue (Cumulative)	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 133 	 $ 400 	 $ 7,142 	 $ 9,358 	 $ 13,175 	 $ 85,425 
+Total Net Income (Cumulative)	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ -   	 $ 103 	 $ 308 	 $ 5,499 	 $ 7,206 	 $ 10,145 	 $ 65,778 
+												
+QUARTERLY SUMMARY	Q1 2025	Q2 2025	Q3 2025	Q4 2025	FY 2025						
+Total Revenue	 $ -   	 $ -   	 $ 7,142 	 $ 78,283 	 $ 85,425 						
+Total Net Income	 $ -   	 $ -   	 $ 5,499 	 $ 60,279 	 $ 65,778 						
+												
+KEY METRICS												
+Year 1 Total Revenue	 $ 85,425 											
+Year 1 Net Income	 $ 65,778 											
+Average Contract Value (ACV)	 $ 7,733 											
+Gross Margin	77%											
+Net Revenue Retention Target	115%											
+LTV:CAC Ratio	4.5:1											
+
