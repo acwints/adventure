@@ -171,6 +171,7 @@ const App: React.FC = () => {
             topic={state.activeTopic}
             onStartTrial={actions.startTrial}
             onRetreat={actions.returnToMap}
+            onStartRelatedQuest={actions.startQuest}
           />
         );
 
@@ -197,7 +198,9 @@ const App: React.FC = () => {
             xpEarned={state.xpEarned}
             leveledUp={state.leveledUp}
             previousLevel={state.previousLevel}
+            relatedTopics={state.activeLesson.relatedTopics}
             onContinue={actions.returnToMap}
+            onStartRelatedQuest={actions.startQuest}
           />
         );
 

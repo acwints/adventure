@@ -9,9 +9,10 @@ interface LessonViewProps {
   topic: string;
   onStartTrial: () => void;
   onRetreat: () => void;
+  onStartRelatedQuest?: (topic: string) => void;
 }
 
-const LessonView: React.FC<LessonViewProps> = ({ lesson, topic, onStartTrial, onRetreat }) => {
+const LessonView: React.FC<LessonViewProps> = ({ lesson, topic, onStartTrial, onRetreat, onStartRelatedQuest }) => {
   const [audioStatus, setAudioStatus] = useState<AudioStatus>('idle');
   const [showContent, setShowContent] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -89,6 +90,11 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, topic, onStartTrial, on
           }
         };
 
+        // Ensure nextStartTime is never in the past (can happen if API calls take longer than audio duration)
+        if (nextStartTime < context.currentTime) {
+          nextStartTime = context.currentTime;
+        }
+        
         source.start(nextStartTime);
         activeSourcesRef.current.add(source);
         nextStartTime += buffer.duration;
@@ -170,9 +176,14 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, topic, onStartTrial, on
                 <span style={styles.relatedLabel}>PATHS AHEAD:</span>
                 <div style={styles.relatedTags}>
                   {lesson.relatedTopics.map((relatedTopic) => (
-                    <span key={relatedTopic} style={styles.relatedTag}>
+                    <button
+                      key={relatedTopic}
+                      onClick={() => onStartRelatedQuest?.(relatedTopic)}
+                      style={styles.relatedTag}
+                      disabled={!onStartRelatedQuest}
+                    >
                       {relatedTopic}
-                    </span>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -331,12 +342,15 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '0.5rem',
   },
   relatedTag: {
-    padding: '0.375rem 0.75rem',
+    padding: '0.5rem 1rem',
     fontSize: '0.875rem',
     background: 'rgba(99, 102, 241, 0.1)',
     border: '1px solid rgba(99, 102, 241, 0.3)',
     borderRadius: 'var(--radius-md)',
     color: 'var(--accent-primary)',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    transition: 'all 0.15s ease',
   },
   ctaWrapper: {
     display: 'flex',

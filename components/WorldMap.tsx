@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { MapRegion, GamePlayer } from '../types';
 import { MAP_REGIONS } from '../constants';
-import { hasCompletedTopic } from '../services/gameService';
+import { hasCompletedTopic, xpProgress, currentLevelXp, xpToNextLevel } from '../services/gameService';
 
 interface WorldMapProps {
   player: GamePlayer;
@@ -146,12 +146,12 @@ const WorldMap: React.FC<WorldMapProps> = ({ player, onSelectRegion, onViewColle
         </div>
         
         <div style={styles.xpBar}>
-          <div style={styles.xpLabel}>XP {player.xp} / {player.level * 100}</div>
+          <div style={styles.xpLabel}>XP {currentLevelXp(player.totalXp)} / {xpToNextLevel(player.totalXp)}</div>
           <div style={styles.xpTrack}>
             <div 
               style={{ 
                 ...styles.xpFill, 
-                width: `${(player.xp / (player.level * 100)) * 100}%` 
+                width: `${xpProgress(player.totalXp) * 100}%` 
               }} 
             />
           </div>

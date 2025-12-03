@@ -11,7 +11,9 @@ interface VictoryScreenProps {
   xpEarned: number;
   leveledUp: boolean;
   previousLevel: number;
+  relatedTopics?: string[];
   onContinue: () => void;
+  onStartRelatedQuest?: (topic: string) => void;
 }
 
 const VictoryScreen: React.FC<VictoryScreenProps> = ({
@@ -23,7 +25,9 @@ const VictoryScreen: React.FC<VictoryScreenProps> = ({
   xpEarned,
   leveledUp,
   previousLevel,
+  relatedTopics = [],
   onContinue,
+  onStartRelatedQuest,
 }) => {
   const [phase, setPhase] = useState(0);
   const [showXpGain, setShowXpGain] = useState(false);
@@ -182,6 +186,24 @@ const VictoryScreen: React.FC<VictoryScreenProps> = ({
           </div>
         )}
 
+        {/* Related paths */}
+        {phase >= 4 && relatedTopics.length > 0 && onStartRelatedQuest && (
+          <div style={styles.relatedSection}>
+            <span style={styles.relatedLabel}>CONTINUE YOUR JOURNEY:</span>
+            <div style={styles.relatedTags}>
+              {relatedTopics.map((relatedTopic) => (
+                <button
+                  key={relatedTopic}
+                  onClick={() => onStartRelatedQuest(relatedTopic)}
+                  style={styles.relatedTag}
+                >
+                  {relatedTopic} →
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Continue */}
         <div 
           style={{
@@ -190,8 +212,8 @@ const VictoryScreen: React.FC<VictoryScreenProps> = ({
             transform: phase >= 4 ? 'translateY(0)' : 'translateY(10px)',
           }}
         >
-          <button onClick={onContinue} className="btn btn-primary" style={styles.continueBtn}>
-            Continue
+          <button onClick={onContinue} className="btn btn-secondary" style={styles.continueBtn}>
+            Return to Map
           </button>
           <p style={styles.hint}>Press Enter to continue</p>
         </div>
@@ -368,6 +390,36 @@ const styles: Record<string, React.CSSProperties> = {
   levelUpText: {
     fontSize: '0.875rem',
     color: 'var(--text-secondary)',
+  },
+  relatedSection: {
+    marginBottom: '1.5rem',
+    textAlign: 'center',
+    animation: 'fadeIn 0.5s ease',
+  },
+  relatedLabel: {
+    display: 'block',
+    fontSize: '0.6875rem',
+    fontWeight: 600,
+    letterSpacing: '0.1em',
+    color: 'var(--text-muted)',
+    marginBottom: '0.75rem',
+  },
+  relatedTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: '0.5rem',
+  },
+  relatedTag: {
+    padding: '0.5rem 1rem',
+    fontSize: '0.875rem',
+    background: 'rgba(99, 102, 241, 0.15)',
+    border: '1px solid var(--accent-primary)',
+    borderRadius: 'var(--radius-md)',
+    color: 'var(--accent-primary)',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    transition: 'all 0.15s ease',
   },
   continueSection: {
     transition: 'all 0.5s ease',

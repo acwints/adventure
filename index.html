@@ -261,6 +261,16 @@
       to { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
     }
     
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    
     .animate-fade-in { animation: fadeIn 0.5s ease-out; }
     .animate-slide-up { animation: slideUp 0.5s ease-out; }
     .animate-slide-down { animation: slideDown 0.5s ease-out; }
