@@ -75,11 +75,13 @@ async function decodeAudioData(
 export async function generateLesson(topic: string): Promise<Lesson> {
     const TIMEOUT = 60000; // 60 seconds
     const lessonPromise = (async () => {
-        const prompt = `You are an expert educator creating an engaging lesson for a middle school student. The topic is "${topic}".
-        Create an exciting lesson that sounds like an adventure.
-        The lesson should have a clear title, be broken down into 2-3 short, easy-to-understand paragraphs.
-        At the end, suggest three related but distinct topics for further exploration.
-        Return the response as a JSON object with the keys "title", "content", and "relatedTopics" (an array of strings).`;
+        const prompt = `You are a Dungeon Master guiding an adventurer through a fantasy world. The current quest is about "${topic}".
+        Create an immersive journal entry or narrative description of this topic.
+        Write in the second person ("You see...", "You discover...").
+        Explain the educational concepts as if they are ancient lore, magical mechanisms, or natural phenomena being observed.
+        The content should be broken down into 2-3 short, evocative paragraphs.
+        At the end, suggest three related "paths" or "mysteries" (related topics) for further exploration.
+        Return the response as a JSON object with the keys "title" (a creative fantasy title for the lesson), "content", and "relatedTopics" (an array of strings).`;
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-pro',
@@ -110,9 +112,11 @@ export async function generateLesson(topic: string): Promise<Lesson> {
 export async function generateQuiz(lessonContent: string): Promise<QuizQuestion[]> {
     const TIMEOUT = 60000; // 60 seconds
     const quizPromise = (async () => {
-        const prompt = `Based on the following lesson content, create a multiple-choice quiz with 3 questions to test understanding. Each question should have 4 possible answers, with only one being correct. Ensure the correctAnswer exactly matches one of the strings in the options array.
+        const prompt = `Based on the following adventure log, create a "Trial of Knowledge" with 3 questions to unlock the next region.
+        The questions should be framed as riddles, puzzles, or challenges related to the lore you just generated.
+        Each question should have 4 possible answers, with only one being correct. Ensure the correctAnswer exactly matches one of the strings in the options array.
         
-        Lesson Content:
+        Adventure Log:
         ${lessonContent}`;
 
         const response = await ai.models.generateContent({

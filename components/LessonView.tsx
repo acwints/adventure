@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { Lesson } from '../types';
 import type { AudioStatus } from '../types';
@@ -7,23 +6,30 @@ import { PlayIcon, StopIcon, LoadingSpinner } from './Icons';
 
 interface LessonViewProps {
   lesson: Lesson;
-  onSelectTopic: (topic: string) => void;
+  topic: string;
+  onStartTrial: () => void;
+  onRetreat: () => void;
 }
 
-const LessonView: React.FC<LessonViewProps> = ({ lesson, onSelectTopic }) => {
+const LessonView: React.FC<LessonViewProps> = ({ lesson, topic, onStartTrial, onRetreat }) => {
   const [audioStatus, setAudioStatus] = useState<AudioStatus>('idle');
+  const [showContent, setShowContent] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const activeSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
   const isCancelledRef = useRef<boolean>(false);
 
-  // Stop all playing/scheduled audio and cancel any pending generation
+  useEffect(() => {
+    const timer = setTimeout(() => setShowContent(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   const stopAudio = useCallback(() => {
     isCancelledRef.current = true;
     activeSourcesRef.current.forEach(source => {
       try {
         source.stop();
       } catch (e) {
-        // Ignore errors if the source was already stopped
+        // Ignore errors if source was already stopped
       }
     });
     activeSourcesRef.current.clear();
@@ -37,13 +43,11 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onSelectTopic }) => {
     setAudioStatus('idle');
   }, []);
   
-  // Cleanup audio on component unmount or when the lesson changes
   useEffect(() => {
     return () => {
       stopAudio();
     };
   }, [lesson, stopAudio]);
-  
 
   const handlePlayAudio = async () => {
     if (audioStatus === 'playing' || audioStatus === 'loading') {
@@ -59,7 +63,6 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onSelectTopic }) => {
       audioContextRef.current = context;
       let nextStartTime = context.currentTime;
 
-      // Split content into sentences for streaming
       const sentences = lesson.content.match(/[^.!?]+[.!?]+/g) || [lesson.content];
       let hasStartedPlaying = false;
 
@@ -81,7 +84,6 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onSelectTopic }) => {
         
         source.onended = () => {
           activeSourcesRef.current.delete(source);
-          // If it's the last source, reset status
           if (activeSourcesRef.current.size === 0 && !isCancelledRef.current) {
             setAudioStatus('idle');
           }
@@ -92,7 +94,6 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onSelectTopic }) => {
         nextStartTime += buffer.duration;
       }
 
-      // If cancelled during generation, the status might still be loading
       if(isCancelledRef.current) {
         setAudioStatus('idle');
       }
@@ -104,41 +105,248 @@ const LessonView: React.FC<LessonViewProps> = ({ lesson, onSelectTopic }) => {
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-slate-700 animate-fade-in">
-      <div className="flex justify-between items-start mb-4">
-        <h2 className="text-3xl font-bold text-cyan-400">{lesson.title}</h2>
-        <button
-          onClick={handlePlayAudio}
-          className="flex items-center gap-2 bg-slate-700 px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors duration-300 disabled:opacity-50"
-          aria-label={audioStatus === 'playing' ? 'Stop audio' : 'Listen to lesson'}
-        >
-          {audioStatus === 'loading' && <LoadingSpinner className="w-5 h-5" />}
-          {audioStatus === 'playing' && <StopIcon className="w-5 h-5 text-red-400" />}
-          {audioStatus !== 'playing' && audioStatus !== 'loading' && <PlayIcon className="w-5 h-5 text-green-400" />}
-          <span>{audioStatus === 'playing' || audioStatus === 'loading' ? 'Stop' : 'Listen'}</span>
-        </button>
-      </div>
-      
-      <div className="prose prose-invert max-w-none text-slate-300 leading-relaxed whitespace-pre-wrap">
-        {lesson.content}
-      </div>
+    <div style={styles.container}>
+      <div style={styles.inner}>
+        {/* Header */}
+        <div style={styles.header}>
+          <button onClick={onRetreat} className="btn btn-secondary" style={styles.backBtn}>
+            ← Return to Map
+          </button>
+        </div>
 
-      <div className="mt-8 pt-6 border-t border-slate-700">
-        <h3 className="text-xl font-semibold text-orange-400 mb-4">Continue Your Adventure...</h3>
-        <div className="flex flex-wrap gap-3">
-          {lesson.relatedTopics.map((topic) => (
-            <button
-              key={topic}
-              onClick={() => onSelectTopic(topic)}
-              className="bg-slate-700 text-slate-200 py-2 px-4 rounded-lg hover:bg-orange-600 transition duration-300"
-            >
-              {topic}
-            </button>
-          ))}
+        {/* Main content */}
+        <div 
+          style={{
+            ...styles.content,
+            opacity: showContent ? 1 : 0,
+            transform: showContent ? 'translateY(0)' : 'translateY(20px)',
+          }}
+        >
+          {/* Topic banner */}
+          <div style={styles.banner}>
+            <span style={styles.bannerLabel}>ADVENTURE LOG</span>
+            <h1 style={styles.topicTitle}>{topic}</h1>
+          </div>
+
+          {/* Content card */}
+          <div style={styles.card}>
+            {/* Title with audio */}
+            <div style={styles.cardHeader}>
+              <div>
+                <h2 style={styles.lessonTitle}>{lesson.title}</h2>
+                <div style={styles.statusBadge}>
+                  <span style={styles.statusDot} />
+                  <span style={styles.statusText}>Knowledge discovered</span>
+                </div>
+              </div>
+              
+              <button
+                onClick={handlePlayAudio}
+                style={styles.audioBtn}
+                aria-label={audioStatus === 'playing' ? 'Stop audio' : 'Listen to lesson'}
+              >
+                {audioStatus === 'loading' && <LoadingSpinner size={20} style={{ color: 'var(--accent-tertiary)' }} />}
+                {audioStatus === 'playing' && <StopIcon size={20} style={{ color: 'var(--accent-danger)' }} />}
+                {audioStatus !== 'playing' && audioStatus !== 'loading' && <PlayIcon size={20} style={{ color: 'var(--accent-success)' }} />}
+                <span>{audioStatus === 'playing' || audioStatus === 'loading' ? 'Stop' : 'Listen'}</span>
+              </button>
+            </div>
+
+            {/* Lesson content */}
+            <div style={styles.lessonContent}>
+              {lesson.content}
+            </div>
+
+            {/* Divider */}
+            <div style={styles.divider}>
+              <div style={styles.dividerLine} />
+              <div style={styles.dividerDot} />
+              <div style={styles.dividerLine} />
+            </div>
+
+            {/* Related topics */}
+            {lesson.relatedTopics.length > 0 && (
+              <div style={styles.relatedSection}>
+                <span style={styles.relatedLabel}>PATHS AHEAD:</span>
+                <div style={styles.relatedTags}>
+                  {lesson.relatedTopics.map((relatedTopic) => (
+                    <span key={relatedTopic} style={styles.relatedTag}>
+                      {relatedTopic}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* CTA */}
+            <div style={styles.ctaWrapper}>
+              <button onClick={onStartTrial} className="btn btn-primary" style={styles.ctaBtn}>
+                🗝️ Take the Quiz
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
+};
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    position: 'fixed',
+    inset: 0,
+    overflow: 'auto',
+    background: `
+      radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      var(--bg-primary)
+    `,
+  },
+  inner: {
+    minHeight: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '2rem 1rem',
+  },
+  header: {
+    width: '100%',
+    maxWidth: '800px',
+    marginBottom: '1.5rem',
+  },
+  backBtn: {
+    padding: '0.5rem 1rem',
+    fontSize: '0.875rem',
+  },
+  content: {
+    width: '100%',
+    maxWidth: '800px',
+    transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+  },
+  banner: {
+    textAlign: 'center',
+    padding: '1rem 0',
+    marginBottom: '1.5rem',
+    background: 'linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.15) 50%, transparent 100%)',
+  },
+  bannerLabel: {
+    fontSize: '0.6875rem',
+    fontWeight: 600,
+    letterSpacing: '0.1em',
+    color: 'var(--text-muted)',
+    marginBottom: '0.5rem',
+    display: 'block',
+  },
+  topicTitle: {
+    fontSize: '1.25rem',
+    fontWeight: 600,
+    color: 'var(--accent-primary)',
+  },
+  card: {
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border-color)',
+    borderRadius: 'var(--radius-xl)',
+    padding: '2rem',
+  },
+  cardHeader: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: '1rem',
+    marginBottom: '1.5rem',
+    paddingBottom: '1.5rem',
+    borderBottom: '1px solid var(--border-color)',
+  },
+  lessonTitle: {
+    fontSize: '1.75rem',
+    fontWeight: 700,
+    color: 'var(--text-primary)',
+    marginBottom: '0.5rem',
+  },
+  statusBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  statusDot: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    background: 'var(--accent-success)',
+  },
+  statusText: {
+    fontSize: '0.875rem',
+    color: 'var(--text-muted)',
+  },
+  audioBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '0.5rem 1rem',
+    background: 'var(--bg-tertiary)',
+    border: '1px solid var(--border-color)',
+    borderRadius: 'var(--radius-md)',
+    color: 'var(--text-primary)',
+    fontSize: '0.875rem',
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+  },
+  lessonContent: {
+    fontSize: '1.125rem',
+    lineHeight: 1.8,
+    color: 'var(--text-secondary)',
+    whiteSpace: 'pre-wrap',
+    marginBottom: '2rem',
+  },
+  divider: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    margin: '2rem 0',
+  },
+  dividerLine: {
+    flex: 1,
+    height: '1px',
+    background: 'var(--border-color)',
+  },
+  dividerDot: {
+    width: '8px',
+    height: '8px',
+    transform: 'rotate(45deg)',
+    background: 'var(--accent-primary)',
+  },
+  relatedSection: {
+    marginBottom: '2rem',
+  },
+  relatedLabel: {
+    fontSize: '0.6875rem',
+    fontWeight: 600,
+    letterSpacing: '0.1em',
+    color: 'var(--text-muted)',
+    marginBottom: '0.75rem',
+    display: 'block',
+  },
+  relatedTags: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.5rem',
+  },
+  relatedTag: {
+    padding: '0.375rem 0.75rem',
+    fontSize: '0.875rem',
+    background: 'rgba(99, 102, 241, 0.1)',
+    border: '1px solid rgba(99, 102, 241, 0.3)',
+    borderRadius: 'var(--radius-md)',
+    color: 'var(--accent-primary)',
+  },
+  ctaWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: '1rem',
+  },
+  ctaBtn: {
+    padding: '1rem 2rem',
+    fontSize: '1rem',
+  },
 };
 
 export default LessonView;

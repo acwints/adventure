@@ -1,0 +1,88 @@
+ADVENTURE AI - B2C MODEL: KEY ASSUMPTIONS
+Subscription + Advertising Revenue Model
+
+CATEGORY	ASSUMPTION	VALUE	RATIONALE/SOURCE
+
+MARKET ASSUMPTIONS								
+Total Addressable Market (TAM)	Global EdTech Market	$350B by 2025	HolonIQ Global EdTech Report
+Serviceable Addressable Market (SAM)	K-12 Gamified Learning US	$8B	Subset focused on gamified learning
+Serviceable Obtainable Market (SOM)	Year 3 Target	$2.4M (0.03%)	Conservative capture rate
+Target Demographics	Primary: Ages 8-14, Secondary: 15-18	70%/30% split	Core gaming + education overlap
+Geographic Focus	US/Canada Year 1, UK/AU Year 2	80% US initially	English-language content first
+
+USER ACQUISITION ASSUMPTIONS								
+Organic Growth Rate	Word-of-mouth + virality	40% of new users	EdTech referral benchmark
+Paid Acquisition Channels	Meta, TikTok, YouTube	60% of new users	Parent + student targeting
+Cost Per Lead (CPL)	Social media average	$2.50	EdTech industry average
+Lead to Registration Rate	Landing page conversion	35%	Optimized funnel assumption
+Cost Per Acquisition (CPA)	Full funnel	$7.14	CPL / conversion rate
+Viral Coefficient	User referrals	0.3	Each user brings 0.3 new users
+
+CONVERSION ASSUMPTIONS								
+Free to Premium Conversion	Industry benchmark	5% average	Freemium gaming apps: 2-7%
+Trial Length	Free trial period	7 days	Standard for subscription apps
+Trial to Paid Conversion	After trial ends	40%	Strong product engagement
+Monthly to Annual Upgrade	Premium users	25%	Discount incentive (37% savings)
+Premium Churn Rate	Monthly subscribers	6%	EdTech: 5-8% monthly
+Annual Churn Rate	Annual subscribers	20%	Lower due to commitment
+
+ENGAGEMENT ASSUMPTIONS								
+Sessions Per Week	Average user	4 sessions	Target for active learners
+Session Duration	Average length	12 minutes	Optimal for content consumption
+Lessons Per Session	Content consumption	1.5 lessons	Including quiz completion
+Weekly Active Users	% of MAU	60%	Healthy engagement target
+30-Day Retention	New user retention	35% Year 2	Industry avg: 25-40%
+Content Completion Rate	Started vs finished	65%	Gamification drives completion
+
+PRICING ASSUMPTIONS								
+Premium Monthly Price	Individual plan	$7.99/mo	Competitive with Duolingo Plus
+Premium Annual Price	Individual plan	$59.99/yr	37% discount vs monthly
+Family Plan Price	Up to 5 members	$14.99/mo	Common family tier pricing
+Price Increase Year 2	Inflation + value add	0%	Hold pricing for growth
+Price Increase Year 3	Established value	10%	Premium features added
+
+ADVERTISING ASSUMPTIONS								
+Ad Fill Rate	Inventory sold	85%	Conservative for new app
+CPM Floor	Minimum acceptable	$2.00	EdTech premium content
+CPM Ceiling	Peak rates	$12.00	Video ads, premium placements
+Average CPM Growth	Annual improvement	25-40%	Better targeting + scale
+Ad Frequency Cap	Per session	3 ads max	UX preservation
+Video Ad Completion	Required for reward	80%	Industry standard
+Brand Safety Score	Content rating	95%+	Family-friendly requirement
+
+COST ASSUMPTIONS								
+Gemini API Cost	Per 1M tokens	$0.50 input / $1.50 output	Google Cloud pricing
+Average Tokens Per Lesson	Content generation	2,500 tokens	Lesson + quiz combined
+Firebase Cost Per MAU	Database + auth	$0.05/user/month	Blended estimate
+Server Cost Scaling	Per 10K MAU	$150/month	Cloud infrastructure
+Payment Processing	Stripe fees	2.9% + $0.30	Standard rate
+Support Cost Per User	Annual	$0.50	Scaled support model
+
+PRODUCT ASSUMPTIONS								
+Topics at Launch	Initial content library	32 topics (8 regions × 4)	MVP scope
+Topics Year 2	Expanded library	80 topics	2.5x growth
+Topics Year 3	Full library	200+ topics	Comprehensive coverage
+Quiz Questions Per Topic	Assessment depth	10 questions	5 for lesson quiz
+AI Response Quality	Acceptable accuracy	95%+	With content review
+Mobile App Launch	iOS + Android	Month 8	After web validation
+Offline Mode	Premium feature	Year 2 Q2	Competitive requirement
+
+COMPETITIVE ASSUMPTIONS								
+Primary Competitors	Similar products	Duolingo, Khan Academy, Prodigy	Gamified education
+Differentiation	Key advantage	AI-generated personalized adventures	Unique content engine
+Competitor Pricing	Market rates	$6.99-$12.99/mo	Positioned competitively
+Market Growth Rate	EdTech CAGR	16.5%	Global market growth
+
+FINANCIAL ASSUMPTIONS								
+Gross Margin Target	After COGS	75-80%	SaaS/subscription benchmark
+EBITDA Breakeven	Target timeline	Month 24	Aggressive scaling
+Series A Trigger	Revenue milestone	$50K MRR	Standard EdTech metric
+Valuation Multiple	Revenue multiple	8-12x ARR	EdTech growth companies
+
+RISK FACTORS								
+API Cost Volatility	Gemini pricing changes	±30% variance	Buffer in projections
+Platform Risk	App Store policies	15-30% rev share	Apple/Google fees
+Regulatory Risk	COPPA compliance	$10K annual	Children's privacy costs
+Content Moderation	AI output review	5% of content budget	Safety requirement
+Seasonality	Usage patterns	-30% summer	School year correlation
+

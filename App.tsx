@@ -1,168 +1,285 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import TopicSelector from './components/TopicSelector';
+import React, { useEffect, useCallback } from 'react';
+import TitleScreen from './components/TitleScreen';
+import LoginView from './components/LoginView';
+import WorldMap from './components/WorldMap';
+import QuestDialog from './components/QuestDialog';
 import LessonView from './components/LessonView';
 import QuizView from './components/QuizView';
-import LoginView from './components/LoginView';
-import { CompassIcon, LoadingSpinner } from './components/Icons';
+import VictoryScreen from './components/VictoryScreen';
+import AdventureCollection from './components/AdventureCollection';
+import { LoadingSpinner } from './components/Icons';
+import { useGameState } from './hooks/useGameState';
 import { generateLesson, generateQuiz } from './services/geminiService';
-import { onAuthStateChanged, signOutUser, isFirebaseEnabled } from './services/firebase';
-import type { Lesson, QuizQuestion, AppStatus, View, User } from './types';
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [topic, setTopic] = useState<string | null>(null);
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null);
-  const [status, setStatus] = useState<AppStatus>('idle');
-  const [error, setError] = useState<string | null>(null);
-  const [currentView, setCurrentView] = useState<View>('learn');
-  const [loadingMessage, setLoadingMessage] = useState<string>('');
+  const { state, actions } = useGameState();
 
+  // Generate lesson content when quest starts
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged((user) => {
-      setUser(user);
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
-  
-  const handleTopicSelect = useCallback((selectedTopic: string) => {
-    setTopic(selectedTopic);
-    setLesson(null);
-    setQuiz(null);
-    setCurrentView('learn');
-    setStatus('loading');
-    setError(null);
-    setLoadingMessage('');
-  }, []);
-
-  useEffect(() => {
-    if (!topic || status !== 'loading') return;
+    if (!state.activeTopic || !state.isGeneratingContent) return;
+    if (state.activeLesson && state.activeQuiz) return;
 
     const fetchContent = async () => {
       try {
-        setLoadingMessage(`Summoning knowledge about ${topic}...`);
-        const lessonData = await generateLesson(topic);
+        actions.setLoadingMessage(`Summoning knowledge about ${state.activeTopic}...`);
+        const lessonData = await generateLesson(state.activeTopic!);
         
-        setLoadingMessage('Forging a challenge from the lesson...');
+        actions.setLoadingMessage('Forging a trial from the knowledge...');
         const quizData = await generateQuiz(lessonData.content);
 
-        setLesson(lessonData);
-        setQuiz(quizData);
-        setStatus('success');
+        actions.setLessonContent(lessonData, quizData);
       } catch (err) {
         console.error(err);
         let errorMessage = 'An unknown error occurred.';
         if (err instanceof Error) {
-            if (err.message.includes('took too long')) {
-                errorMessage = "The AI is taking a while to respond. This can happen with complex topics. Please try again, or perhaps explore a different topic!";
-            } else {
-                errorMessage = `Failed to generate adventure. ${err.message}`;
-            }
+          if (err.message.includes('took too long')) {
+            errorMessage = "The ancient scrolls are taking a while to appear. Please try again, brave adventurer!";
+          } else {
+            errorMessage = `Failed to generate adventure. ${err.message}`;
+          }
         }
-        setError(errorMessage);
-        setStatus('error');
+        actions.setContentError(errorMessage);
       }
     };
 
     fetchContent();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topic, status]);
+  }, [state.activeTopic, state.isGeneratingContent, state.activeLesson, state.activeQuiz, actions]);
 
-  const handleRestart = () => {
-    setTopic(null);
-    setLesson(null);
-    setQuiz(null);
-    setStatus('idle');
-    setError(null);
-    setLoadingMessage('');
-  };
-  
-  const renderAppContent = () => {
-    switch (status) {
-      case 'loading':
-        return (
-          <div className="text-center p-8 bg-slate-800/50 rounded-xl">
-            <LoadingSpinner className="w-12 h-12 mx-auto text-cyan-400" />
-            <p className="mt-4 text-xl">{loadingMessage || `Charting a course for ${topic}...`}</p>
-          </div>
-        );
-      case 'error':
-        return (
-          <div className="text-center p-8 bg-red-900/50 border border-red-700 rounded-xl">
-            <h2 className="text-2xl font-bold text-red-400">Adventure Halted!</h2>
-            <p className="mt-2 text-red-300">{error}</p>
-            <button
-              onClick={handleRestart}
-              className="mt-6 bg-cyan-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-cyan-500 transition duration-300"
-            >
-              Try Again
-            </button>
-          </div>
-        );
-      case 'success':
-        if (lesson && quiz) {
-            return (
-              <div>
-                <div className="flex justify-center mb-6 gap-2 p-1 bg-slate-900/50 rounded-lg border border-slate-700 w-min mx-auto">
-                    <button onClick={() => setCurrentView('learn')} className={`px-6 py-2 rounded-md transition-colors text-sm font-semibold ${currentView === 'learn' ? 'bg-cyan-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}>Learn</button>
-                    <button onClick={() => setCurrentView('quiz')} className={`px-6 py-2 rounded-md transition-colors text-sm font-semibold ${currentView === 'quiz' ? 'bg-cyan-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}>Quiz</button>
-                </div>
+  // Handle login
+  const handleLogin = useCallback(async (email: string, password: string) => {
+    await actions.login(email, password);
+  }, [actions]);
 
-                {currentView === 'learn' && <LessonView lesson={lesson} onSelectTopic={handleTopicSelect} />}
-                {currentView === 'quiz' && topic && <QuizView quiz={quiz} topic={topic} onRestart={handleRestart} />}
-              </div>
-            );
-        }
-        return null;
-      default: // 'idle'
-        return <TopicSelector onTopicSelect={handleTopicSelect} isLoading={false} />;
-    }
-  };
-
-  if (authLoading && isFirebaseEnabled) {
+  // Render loading state
+  if (state.authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner className="w-16 h-16 text-cyan-400" />
+      <div style={styles.loadingContainer}>
+        <div style={styles.loadingContent}>
+          <LoadingSpinner size={48} style={{ color: 'var(--accent-primary)', marginBottom: '1rem' }} />
+          <p style={styles.loadingText}>Loading...</p>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-900 font-sans p-4 sm:p-8 flex flex-col items-center">
-      <header className="w-full max-w-4xl mb-8">
-        <div className="flex items-center justify-between">
-            <div className="flex items-center justify-center gap-4">
-                <CompassIcon className="w-12 h-12 text-cyan-400"/>
-                <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-orange-400 text-transparent bg-clip-text">
-                    Adventure AI
-                </h1>
-            </div>
-            {isFirebaseEnabled && user && (
-                <div className="flex items-center gap-4">
-                    <span className="text-slate-300 hidden sm:block">Welcome, {user.displayName?.split(' ')[0]}</span>
-                    {user.photoURL && <img src={user.photoURL} alt="User profile" className="w-10 h-10 rounded-full" />}
-                    <button onClick={signOutUser} className="bg-slate-700 text-slate-200 py-2 px-4 rounded-lg hover:bg-slate-600 transition duration-300">
-                        Sign Out
-                    </button>
+  // Render based on current game view
+  const renderGameView = () => {
+    switch (state.currentView) {
+      case 'title':
+        return <TitleScreen onStart={actions.startFromTitle} />;
+
+      case 'login':
+        return (
+          <LoginView
+            onLogin={handleLogin}
+            isLoading={state.authLoading}
+            error={state.authError}
+            onBack={() => actions.setView('title')}
+          />
+        );
+
+      case 'world_map':
+        if (!state.player) return null;
+        return (
+          <WorldMap
+            player={state.player}
+            onSelectRegion={actions.selectRegion}
+            onViewCollection={actions.viewCollection}
+            onLogout={actions.logout}
+          />
+        );
+
+      case 'quest_intro':
+        if (!state.player || !state.activeRegion) return null;
+        return (
+          <QuestDialog
+            region={state.activeRegion}
+            player={state.player}
+            onStartQuest={actions.startQuest}
+            onClose={actions.returnToMap}
+          />
+        );
+
+      case 'adventure':
+        if (!state.activeTopic) return null;
+
+        // Show loading state while generating content
+        if (state.isGeneratingContent || !state.activeLesson || !state.activeQuiz) {
+          return (
+            <div style={styles.adventureLoading}>
+              <div style={styles.adventureLoadingContent}>
+                {/* Animated icon */}
+                <div style={styles.loadingIconWrapper}>
+                  <span style={{ fontSize: '2rem' }}>📜</span>
                 </div>
-            )}
-        </div>
-        <p className="text-slate-400 mt-2 text-left">Your personal AI guide to the wonders of knowledge.</p>
-      </header>
-      
-      <main className="w-full max-w-4xl">
-        {!isFirebaseEnabled ? (
-          renderAppContent()
-        ) : !user ? (
-          <LoginView />
-        ) : (
-          renderAppContent()
-        )}
-      </main>
+
+                {/* Spinner */}
+                <LoadingSpinner size={32} style={{ color: 'var(--accent-tertiary)', marginBottom: '1rem' }} />
+                
+                {/* Message */}
+                <p style={styles.loadingMessage}>
+                  {state.loadingMessage || 'Preparing your adventure...'}
+                </p>
+                <p style={styles.loadingTopic}>{state.activeTopic}</p>
+
+                {/* Error state */}
+                {state.contentError && (
+                  <div style={styles.errorContainer}>
+                    <div style={styles.errorBox}>
+                      <p style={styles.errorText}>{state.contentError}</p>
+                    </div>
+                    <button
+                      onClick={actions.returnToMap}
+                      className="btn btn-secondary"
+                    >
+                      Return to Map
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <LessonView
+            lesson={state.activeLesson}
+            topic={state.activeTopic}
+            onStartTrial={actions.startTrial}
+            onRetreat={actions.returnToMap}
+          />
+        );
+
+      case 'trial':
+        if (!state.activeTopic || !state.activeQuiz) return null;
+        return (
+          <QuizView
+            quiz={state.activeQuiz}
+            topic={state.activeTopic}
+            onComplete={actions.completeTrial}
+            onRetreat={actions.returnToMap}
+          />
+        );
+
+      case 'victory':
+        if (!state.player || !state.activeTopic || !state.activeLesson) return null;
+        return (
+          <VictoryScreen
+            player={state.player}
+            topic={state.activeTopic}
+            lessonTitle={state.activeLesson.title}
+            quizScore={state.quizScore}
+            quizTotal={state.activeQuiz?.length || 0}
+            xpEarned={state.xpEarned}
+            leveledUp={state.leveledUp}
+            previousLevel={state.previousLevel}
+            onContinue={actions.returnToMap}
+          />
+        );
+
+      case 'collection':
+        if (!state.player) return null;
+        return (
+          <AdventureCollection
+            player={state.player}
+            onBack={actions.returnToMap}
+          />
+        );
+
+      default:
+        return <TitleScreen onStart={actions.startFromTitle} />;
+    }
+  };
+
+  return (
+    <div style={styles.app}>
+      {renderGameView()}
     </div>
   );
+};
+
+const styles: Record<string, React.CSSProperties> = {
+  app: {
+    minHeight: '100vh',
+    overflow: 'hidden',
+    background: 'var(--bg-primary)',
+  },
+  loadingContainer: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--bg-primary)',
+  },
+  loadingContent: {
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: '0.875rem',
+    color: 'var(--text-muted)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+  },
+  adventureLoading: {
+    position: 'fixed',
+    inset: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: `
+      radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      var(--bg-primary)
+    `,
+  },
+  adventureLoadingContent: {
+    textAlign: 'center',
+    maxWidth: '400px',
+    padding: '0 1rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  loadingIconWrapper: {
+    width: '80px',
+    height: '80px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '1.5rem',
+    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.05) 100%)',
+    border: '2px solid var(--accent-primary)',
+    animation: 'pulse 2s ease-in-out infinite',
+  },
+  loadingMessage: {
+    fontSize: '1.125rem',
+    color: 'var(--text-primary)',
+    marginBottom: '0.5rem',
+  },
+  loadingTopic: {
+    fontSize: '0.875rem',
+    color: 'var(--text-muted)',
+  },
+  errorContainer: {
+    marginTop: '1.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+  errorBox: {
+    padding: '1rem',
+    borderRadius: 'var(--radius-md)',
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
+  },
+  errorText: {
+    color: 'var(--accent-danger)',
+    fontSize: '0.875rem',
+  },
 };
 
 export default App;

@@ -1,0 +1,123 @@
+ADVENTURE AI - B2B MODEL: KEY ASSUMPTIONS
+SaaS/EdTech Partnerships Revenue Model
+
+CATEGORY	ASSUMPTION	VALUE	RATIONALE/SOURCE
+
+MARKET ASSUMPTIONS								
+Total Addressable Market (TAM)	US K-12 EdTech	$56B by 2026	EdTech Digest Market Report
+Serviceable Addressable Market (SAM)	Supplemental Digital Curriculum	$12B	Non-core curriculum software
+Serviceable Obtainable Market (SOM)	Year 3 Target	$4.3M (0.036%)	Conservative capture rate
+Target Customer Segments	K-12 Schools & Districts	70% public, 30% private	Budget cycle alignment
+Geographic Focus	US Year 1, Canada/UK Year 2-3	100% US initially	Compliance simplicity
+Total US K-12 Schools	Public + Private	130,000	NCES data
+Total US School Districts	Operating districts	13,500	NCES data
+
+SALES CYCLE ASSUMPTIONS								
+Average Sales Cycle - School	Decision to close	45-60 days	Principal/admin decision
+Average Sales Cycle - District	Decision to close	4-6 months	Procurement process
+Average Sales Cycle - Enterprise	State/large district	9-12 months	RFP process required
+Pilot Duration	Free trial period	90 days	Full semester evaluation
+Pilot to Paid Conversion	After successful pilot	55% Year 2	Industry benchmark: 40-60%
+Budget Cycle	Primary buying window	Q1 & Q4	Jan-Mar, Oct-Dec
+Decision Makers	Title I, Curriculum Dir, Tech Dir	3 stakeholders avg	Multi-person approval
+
+PRICING ASSUMPTIONS								
+Small School License	<500 students	$1,500/year	$3/student floor
+Medium School License	500-2000 students	$4,000/year	$2.50/student
+Large School License	2000+ students	$8,000/year	$2/student (volume)
+Small District License	5-15 schools	$25,000/year	15% discount vs individual
+Medium District License	15-50 schools	$75,000/year	25% discount vs individual
+Large District License	50+ schools	$200,000/year	35% discount vs individual
+Per-Student Pricing (Alt Model)	Usage-based option	$3-5/student/year	Flexibility for budgets
+Annual Price Increase	Existing customers	5-8%	Standard SaaS escalation
+
+RETENTION ASSUMPTIONS								
+Gross Revenue Retention	Without expansion	92% Year 2	EdTech benchmark: 85-95%
+Net Revenue Retention	With expansion	115% Year 2	Upsells + cross-sells
+School Churn Rate	Annual	10%	Lower engagement schools
+District Churn Rate	Annual	5%	Stronger commitment
+Renewal Process Start	Before expiration	90 days	Proactive outreach
+Auto-Renewal Rate	Contracts with auto-renew	60%	Reduces friction
+
+CUSTOMER ACQUISITION ASSUMPTIONS								
+CAC - Inbound Lead	Website, content	$2,500	Lower touch sales
+CAC - Outbound Lead	SDR sourced	$5,000	Higher touch sales
+CAC - Conference Lead	Event sourced	$8,000	Highest quality
+Blended CAC - School	Weighted average	$4,500	Mix of channels
+Blended CAC - District	Weighted average	$15,000	Longer sales cycle
+Lead to Opportunity Rate	Qualified leads	25%	Education decision makers
+Opportunity to Close Rate	Pipeline conversion	30%	Pilot program helps
+
+PARTNERSHIP ASSUMPTIONS								
+LMS Integration Timeline	Development to live	3-4 months	Canvas, Schoology, etc.
+Revenue Share - LMS Partners	Platform fee	15-25%	Standard marketplace cut
+White-Label Minimum Commitment	Contract term	2 years	Ensures ROI
+Content Licensing Minimum	Contract term	1 year	Annual renewal
+API Pricing Tiers	Developer access	$99-499/month	Usage-based scaling
+Partner Acquisition Cost	Per partnership	$25,000	BD + legal + integration
+
+USAGE ASSUMPTIONS								
+Avg Students Per School	Active licenses	450	Mix of school sizes
+Avg Sessions Per Student/Week	Platform usage	2.5 sessions	Supplemental use case
+Avg Session Duration	Time on platform	15 minutes	Fits into class period
+Content Completion Rate	Assigned vs completed	75%	Teacher-assigned boost
+Teacher Adoption Rate	Active teacher users	60%	Training dependent
+Admin Dashboard Usage	Monthly logins	4	Progress monitoring
+
+COMPLIANCE ASSUMPTIONS								
+FERPA Compliance	Student data privacy	Required	US schools mandate
+COPPA Compliance	Under-13 data	Required	Children's privacy
+State Student Privacy Laws	CA, NY, etc.	12 states	Growing requirements
+GDPR (International)	EU data protection	Year 2	International expansion
+Accessibility (WCAG 2.1)	AA compliance	Required	ADA requirements
+SOC 2 Type 2	Security audit	Year 2	Enterprise requirement
+Data Retention Policy	Student data	3 years max	Best practice
+
+PROFESSIONAL SERVICES ASSUMPTIONS								
+Implementation Time - School	Onboarding complete	2 weeks	Training + setup
+Implementation Time - District	Onboarding complete	6-8 weeks	Multiple schools
+Training Ratio	Teachers per session	15	Workshop capacity
+Custom Content Lead Time	Development	4-6 weeks	Per content pack
+Support Ticket Volume	Per 1000 students	50/month	Industry average
+Support Resolution Time	First response	4 hours	SLA target
+
+COST ASSUMPTIONS								
+Gemini API Cost Per Student	Monthly	$0.08	Content generation
+Firebase Cost Per Student	Monthly	$0.03	Auth + database
+Infrastructure Per School	Monthly	$25	Hosting + CDN
+Customer Success Cost	Per $100K ARR	$15,000	CSM allocation
+Sales Cost	Per $100K ARR	$25,000	Sales team allocation
+Support Cost Per Student	Annual	$0.25	Scaled support model
+
+COMPETITIVE ASSUMPTIONS								
+Primary Competitors	K-12 Supplemental	Prodigy, IXL, Kahoot, Newsela	Direct competition
+Competitive Win Rate	Head-to-head deals	40%	Year 2 target
+Differentiation	Key advantages	AI-personalization, gamification, curriculum alignment	Unique value prop
+Competitor Pricing	Market rates	$3-8/student/year	Price positioning
+Switching Cost	Migration effort	Low-Medium	Data portability
+
+SCALING ASSUMPTIONS								
+Quota Per Sales Rep	Annual	$600K ARR	EdTech benchmark
+Ramp Time - New Rep	To full productivity	6 months	Training + territory
+Customer Success Ratio	Accounts per CSM	40 schools or 8 districts	Capacity planning
+Support Ratio	Students per support FTE	15,000	Scaled operations
+Content Update Cycle	Refresh frequency	Quarterly	Curriculum alignment
+
+FINANCIAL ASSUMPTIONS								
+Gross Margin Target	After COGS	80%	SaaS benchmark
+Sales & Marketing %	Of revenue	35-40% Year 2	Growth phase
+R&D %	Of revenue	25-30%	Product development
+G&A %	Of revenue	15-20%	Operations
+EBITDA Breakeven	Target timeline	Month 30	B2B longer runway
+Series A Trigger	ARR milestone	$1M ARR	Standard EdTech threshold
+Valuation Multiple	ARR multiple	10-15x ARR	EdTech SaaS companies
+
+RISK FACTORS								
+Budget Cycle Risk	Timing dependency	High Q2-Q3 impact	Plan for seasonality
+Procurement Delays	District bureaucracy	30% deal slip	Build pipeline buffer
+Champion Departure	Contact turnover	15% annual	Multi-thread relationships
+Pilot Fatigue	Too many vendors	Real risk	Differentiate clearly
+Integration Complexity	LMS dependencies	Medium risk	Standard APIs mitigate
+Regulatory Changes	Privacy laws	Ongoing	Compliance investment
+Economic Sensitivity	Budget cuts	Supplemental first cut	Prove ROI quickly
+

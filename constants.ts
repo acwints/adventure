@@ -1,3 +1,4 @@
+import type { MapRegion } from './types';
 
 export const PREDEFINED_TOPICS = [
   'The Roman Empire',
@@ -9,3 +10,99 @@ export const PREDEFINED_TOPICS = [
   'Dinosaurs',
   'Volcanoes',
 ];
+
+// Map regions for the world map
+export const MAP_REGIONS: MapRegion[] = [
+  {
+    id: 'history_peaks',
+    name: 'History Peaks',
+    description: 'Ancient civilizations and legendary empires await in these misty mountains.',
+    topics: ['The Roman Empire', 'The Great Wall of China', 'Ancient Egypt', 'The Vikings'],
+    x: 15,
+    y: 25,
+    icon: '🏛️',
+    color: '#C9A227',
+  },
+  {
+    id: 'nature_grove',
+    name: 'Nature Grove',
+    description: 'A verdant forest where the secrets of life and biology flourish.',
+    topics: ['Photosynthesis', 'Rainforest Ecosystems', 'The Water Cycle', 'Animal Migration'],
+    x: 70,
+    y: 20,
+    icon: '🌿',
+    color: '#2D5A27',
+  },
+  {
+    id: 'cosmic_observatory',
+    name: 'Cosmic Observatory',
+    description: 'Gaze into the infinite cosmos and unravel celestial mysteries.',
+    topics: ['The Solar System', 'Black Holes', 'The Big Bang', 'Constellations'],
+    x: 50,
+    y: 10,
+    icon: '🔭',
+    color: '#1E3A5F',
+  },
+  {
+    id: 'tech_citadel',
+    name: 'Tech Citadel',
+    description: 'A gleaming fortress of innovation where technology shapes the future.',
+    topics: ['Artificial Intelligence', 'Quantum Computing', 'Robotics', 'The Internet'],
+    x: 80,
+    y: 55,
+    icon: '⚡',
+    color: '#00CED1',
+  },
+  {
+    id: 'ancient_fossils',
+    name: 'Fossil Badlands',
+    description: 'Windswept canyons hold the bones of creatures from ages past.',
+    topics: ['Dinosaurs', 'Ice Age Mammals', 'Evolution', 'Prehistoric Ocean Life'],
+    x: 25,
+    y: 60,
+    icon: '🦴',
+    color: '#8B4513',
+  },
+  {
+    id: 'elemental_forge',
+    name: 'Elemental Forge',
+    description: 'Where Earth\'s raw power shapes mountains and ignites the sky.',
+    topics: ['Volcanoes', 'Earthquakes', 'Weather Patterns', 'Plate Tectonics'],
+    x: 55,
+    y: 70,
+    icon: '🌋',
+    color: '#DC143C',
+  },
+  {
+    id: 'mystery_depths',
+    name: 'Mystery Depths',
+    description: 'Descend into the unknown waters where strange wonders lurk.',
+    topics: ['Deep Sea Creatures', 'Ocean Trenches', 'Bioluminescence', 'Coral Reefs'],
+    x: 40,
+    y: 85,
+    icon: '🐙',
+    color: '#4169E1',
+  },
+  {
+    id: 'mind_sanctuary',
+    name: 'Mind Sanctuary',
+    description: 'A tranquil temple dedicated to understanding the human experience.',
+    topics: ['The Human Brain', 'Psychology of Dreams', 'Memory', 'Emotions'],
+    x: 85,
+    y: 30,
+    icon: '🧠',
+    color: '#9932CC',
+  },
+];
+
+// XP thresholds for levels
+export const LEVEL_TITLES: Record<number, string> = {
+  1: 'Novice Adventurer',
+  5: 'Eager Apprentice',
+  10: 'Proven Pathfinder',
+  15: 'Skilled Seeker',
+  20: 'Seasoned Traveler',
+  30: 'Grand Adventurer',
+  40: 'Master Explorer',
+  50: 'Legendary Scholar',
+};
