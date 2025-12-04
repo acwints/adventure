@@ -8,10 +8,8 @@ interface OnlinePlayersProps {
 }
 
 const CHAR_SIZE = 26;
-
-// Players do small idle movements around their region
-const IDLE_RADIUS = 25;
-const IDLE_SPEED = 0.3;
+const ORBIT_RADIUS = 50; // Distance from region center
+const ORBIT_SPEED = 0.0008; // Radians per frame
 
 interface PlayerState {
   id: string;
@@ -23,11 +21,9 @@ interface PlayerState {
   regionId: string;
   currentQuest: string;
   isOnline: boolean;
-  // Position offset from region center
-  offsetX: number;
-  offsetY: number;
-  targetOffsetX: number;
-  targetOffsetY: number;
+  // Orbit state
+  orbitAngle: number;
+  orbitSpeed: number;
 }
 
 const OnlinePlayers: React.FC<OnlinePlayersProps> = ({ mapWidth, mapHeight, regionPositions }) => {
@@ -35,52 +31,32 @@ const OnlinePlayers: React.FC<OnlinePlayersProps> = ({ mapWidth, mapHeight, regi
   const [hoveredPlayer, setHoveredPlayer] = useState<string | null>(null);
   const animationFrame = useRef<number>();
 
-  // Initialize players at their assigned regions
+  // Initialize players at their assigned regions with random starting orbit positions
   useEffect(() => {
     const initialPlayers: PlayerState[] = DUMMY_PLAYERS
       .filter(p => p.isOnline) // Only show online players on the map
-      .map((p) => ({
+      .map((p, index) => ({
         ...p,
-        offsetX: (Math.random() - 0.5) * IDLE_RADIUS * 2,
-        offsetY: (Math.random() - 0.5) * IDLE_RADIUS * 2,
-        targetOffsetX: (Math.random() - 0.5) * IDLE_RADIUS * 2,
-        targetOffsetY: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+        // Start at different positions around the orbit
+        orbitAngle: (index / DUMMY_PLAYERS.filter(pl => pl.isOnline).length) * Math.PI * 2,
+        // Slightly varied orbit speeds for visual interest
+        orbitSpeed: ORBIT_SPEED * (0.8 + Math.random() * 0.4),
       }));
     setPlayers(initialPlayers);
   }, []);
 
-  // Periodically set new target positions for idle movement
+  // Orbit animation loop
   useEffect(() => {
-    const updateTargets = () => {
+    const animate = () => {
       setPlayers(prev => prev.map(player => ({
         ...player,
-        targetOffsetX: (Math.random() - 0.5) * IDLE_RADIUS * 2,
-        targetOffsetY: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+        orbitAngle: player.orbitAngle + player.orbitSpeed,
       })));
+
+      animationFrame.current = requestAnimationFrame(animate);
     };
 
-    const interval = setInterval(updateTargets, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Smooth movement animation toward target
-  useEffect(() => {
-    const gameLoop = () => {
-      setPlayers(prev => prev.map(player => {
-        const dx = player.targetOffsetX - player.offsetX;
-        const dy = player.targetOffsetY - player.offsetY;
-        
-        return {
-          ...player,
-          offsetX: player.offsetX + dx * IDLE_SPEED * 0.05,
-          offsetY: player.offsetY + dy * IDLE_SPEED * 0.05,
-        };
-      }));
-
-      animationFrame.current = requestAnimationFrame(gameLoop);
-    };
-
-    animationFrame.current = requestAnimationFrame(gameLoop);
+    animationFrame.current = requestAnimationFrame(animate);
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
     };
@@ -94,16 +70,19 @@ const OnlinePlayers: React.FC<OnlinePlayersProps> = ({ mapWidth, mapHeight, regi
         const regionPos = regionPositions[player.regionId];
         if (!regionPos) return null;
 
-        const baseX = regionPos.xPct * mapWidth;
-        const baseY = regionPos.yPct * mapHeight;
+        // Calculate orbit position
+        const centerX = regionPos.xPct * mapWidth;
+        const centerY = regionPos.yPct * mapHeight;
+        const orbitX = centerX + Math.cos(player.orbitAngle) * ORBIT_RADIUS;
+        const orbitY = centerY + Math.sin(player.orbitAngle) * ORBIT_RADIUS;
 
         return (
           <div
             key={player.id}
             style={{
               ...styles.playerContainer,
-              left: baseX + player.offsetX - CHAR_SIZE / 2,
-              top: baseY + player.offsetY - CHAR_SIZE / 2 + 45, // Offset below region icon
+              left: orbitX - CHAR_SIZE / 2,
+              top: orbitY - CHAR_SIZE / 2,
             }}
             onMouseEnter={() => setHoveredPlayer(player.id)}
             onMouseLeave={() => setHoveredPlayer(null)}
@@ -163,7 +142,6 @@ const styles: Record<string, React.CSSProperties> = {
     height: CHAR_SIZE,
     zIndex: 5,
     cursor: 'pointer',
-    transition: 'transform 0.1s ease',
   },
   avatar: {
     width: CHAR_SIZE,
