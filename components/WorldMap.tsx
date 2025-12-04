@@ -21,16 +21,16 @@ const CIRCLE_RADIUS = 0.32; // Radius as percentage of smaller dimension
 const CENTER_X = 0.5;
 const CENTER_Y = 0.5;
 
-// Themed decorations for each region
+// Themed decorations for each region (8 elements each for symmetry)
 const REGION_DECORATIONS: Record<string, string[]> = {
-  'history_peaks': ['🏛️', '📜', '⚔️', '👑', '🏺'],
-  'nature_grove': ['🌳', '🌲', '🦋', '🌸', '🍃', '🐦'],
-  'cosmic_observatory': ['⭐', '🌟', '✨', '💫', '🌙'],
-  'tech_citadel': ['💻', '🔌', '⚡', '🤖', '📡'],
-  'ancient_fossils': ['🦴', '🦕', '🦖', '🐚', '💎'],
-  'elemental_forge': ['🔥', '🌋', '💨', '🌊', '⚡'],
-  'mystery_depths': ['🐙', '🐠', '🐟', '🦑', '🫧', '🐚'],
-  'mind_sanctuary': ['🧠', '💭', '✨', '🔮', '💫'],
+  'history_peaks': ['🏛️', '📜', '⚔️', '👑', '🏺', '🗿', '📜', '⚔️'],
+  'nature_grove': ['🌳', '🌲', '🦋', '🌸', '🍃', '🐦', '🌿', '🌻'],
+  'cosmic_observatory': ['⭐', '🌟', '✨', '💫', '🌙', '☄️', '🪐', '⭐'],
+  'tech_citadel': ['💻', '🔌', '⚡', '🤖', '📡', '🔋', '💾', '⚙️'],
+  'ancient_fossils': ['🦴', '🦕', '🦖', '🐚', '💎', '🪨', '🦴', '🦕'],
+  'elemental_forge': ['🔥', '🌋', '💨', '🌊', '⚡', '🔥', '💨', '🌊'],
+  'mystery_depths': ['🐙', '🐠', '🐟', '🦑', '🫧', '🐚', '🦈', '🐡'],
+  'mind_sanctuary': ['🧠', '💭', '✨', '🔮', '💫', '🧠', '💭', '✨'],
 };
 
 // Calculate positions in a circle
@@ -230,13 +230,15 @@ const WorldMap: React.FC<WorldMapProps> = ({
 
   const charPixelPos = getPixelPos(charPos.x, charPos.y);
 
-  // Render themed decorations around a region
+  // Render themed decorations around a region (8 elements evenly spaced)
   const renderDecorations = (regionId: string, centerX: number, centerY: number, color: string) => {
     const decorations = REGION_DECORATIONS[regionId] || [];
-    const decorRadius = 70; // Distance from center
+    const decorRadius = 75; // Distance from center
+    const numSlots = 8; // Always 8 evenly spaced positions
+    const startAngle = -Math.PI / 2; // Start from top
     
-    return decorations.map((emoji, i) => {
-      const angle = (i / decorations.length) * Math.PI * 2;
+    return decorations.slice(0, numSlots).map((emoji, i) => {
+      const angle = startAngle + (i / numSlots) * Math.PI * 2;
       const x = centerX + Math.cos(angle) * decorRadius;
       const y = centerY + Math.sin(angle) * decorRadius;
       
@@ -245,12 +247,18 @@ const WorldMap: React.FC<WorldMapProps> = ({
           key={`${regionId}-deco-${i}`}
           style={{
             position: 'absolute',
-            left: x - 10,
-            top: y - 10,
-            fontSize: '1.25rem',
-            opacity: 0.7,
+            left: x - 12,
+            top: y - 12,
+            width: 24,
+            height: 24,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.125rem',
+            opacity: 0.75,
             filter: `drop-shadow(0 0 4px ${color}50)`,
             pointerEvents: 'none',
+            zIndex: 2,
           }}
         >
           {emoji}
