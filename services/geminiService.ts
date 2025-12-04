@@ -171,3 +171,38 @@ export async function generateSpeech(text: string): Promise<AudioBuffer> {
     const audioBytes = decode(base64Audio);
     return await decodeAudioData(audioBytes, outputAudioContext, 24000, 1);
 }
+
+export async function askQuestion(
+    question: string, 
+    context?: { currentTopic?: string; recentTopics?: string[] }
+): Promise<string> {
+    const TIMEOUT = 30000; // 30 seconds
+    
+    const questionPromise = (async () => {
+        let contextInfo = '';
+        if (context?.currentTopic) {
+            contextInfo += `\nThe adventurer is currently exploring: "${context.currentTopic}"`;
+        }
+        if (context?.recentTopics && context.recentTopics.length > 0) {
+            contextInfo += `\nRecently completed quests: ${context.recentTopics.join(', ')}`;
+        }
+
+        const prompt = `You are a friendly and knowledgeable guide in Adventure AI, an educational fantasy game.
+You help players learn about various topics in an engaging way.
+Keep responses concise (2-3 short paragraphs max) and educational.
+Use adventure/fantasy metaphors when explaining concepts.
+If asked something unrelated to learning, gently redirect to educational topics.
+${contextInfo}
+
+Adventurer's question: ${question}`;
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+        });
+
+        return response.text || 'I apologize, brave adventurer, but I could not conjure an answer. Please try asking again.';
+    })();
+    
+    return withTimeout(questionPromise, TIMEOUT, 'The ancient scrolls are taking too long to decipher. Please try again.');
+}

@@ -70,3 +70,25 @@ export type GameView =
 export type AppStatus = 'idle' | 'loading' | 'error' | 'success';
 export type AudioStatus = 'idle' | 'loading' | 'playing' | 'error';
 export type View = 'learn' | 'quiz';
+
+// MMO Social Types
+export interface OnlinePlayer {
+  id: string;
+  displayName: string;
+  avatar: string;
+  color: string;
+  x: number;
+  y: number;
+  direction: 'up' | 'down' | 'left' | 'right';
+  isMoving: boolean;
+  level: number;
+  title: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  content: string;
+  sender: 'user' | 'assistant';
+  timestamp: number;
+  isLoading?: boolean;
+}

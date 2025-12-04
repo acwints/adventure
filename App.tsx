@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import TitleScreen from './components/TitleScreen';
 import LoginView from './components/LoginView';
 import WorldMap from './components/WorldMap';
@@ -7,12 +7,15 @@ import LessonView from './components/LessonView';
 import QuizView from './components/QuizView';
 import VictoryScreen from './components/VictoryScreen';
 import AdventureCollection from './components/AdventureCollection';
+import ChatPanel from './components/ChatPanel';
 import { LoadingSpinner } from './components/Icons';
 import { useGameState } from './hooks/useGameState';
 import { generateLesson, generateQuiz } from './services/geminiService';
+import { MAP_REGIONS } from './constants';
 
 const App: React.FC = () => {
   const { state, actions } = useGameState();
+  const [isChatOpen, setIsChatOpen] = useState(false);
   
   // Track if we're currently fetching to prevent duplicate requests
   const isFetchingRef = useRef(false);
@@ -74,6 +77,18 @@ const App: React.FC = () => {
     await actions.login(email, password);
   }, [actions]);
 
+  // Handle random quest - pick a random topic from all regions
+  const handleStartRandomQuest = useCallback(() => {
+    const allTopics = MAP_REGIONS.flatMap(region => region.topics);
+    const randomTopic = allTopics[Math.floor(Math.random() * allTopics.length)];
+    actions.startQuest(randomTopic);
+  }, [actions]);
+
+  // Toggle chat panel
+  const toggleChat = useCallback(() => {
+    setIsChatOpen(prev => !prev);
+  }, []);
+
   // Render loading state
   if (state.authLoading) {
     return (
@@ -85,6 +100,9 @@ const App: React.FC = () => {
       </div>
     );
   }
+
+  // Check if we should show the chat panel (only on world_map view)
+  const showChat = state.currentView === 'world_map' && state.player;
 
   // Render based on current game view
   const renderGameView = () => {
@@ -110,6 +128,7 @@ const App: React.FC = () => {
             onSelectRegion={actions.selectRegion}
             onViewCollection={actions.viewCollection}
             onLogout={actions.logout}
+            onStartRandomQuest={handleStartRandomQuest}
           />
         );
 
@@ -220,19 +239,45 @@ const App: React.FC = () => {
 
   return (
     <div style={styles.app}>
-      {renderGameView()}
+      {/* Main game content */}
+      <div style={{
+        ...styles.gameContainer,
+        marginRight: showChat && isChatOpen ? '340px' : '0',
+      }}>
+        {renderGameView()}
+      </div>
+
+      {/* Chat panel - only show when on world map */}
+      {showChat && (
+        <ChatPanel
+          isOpen={isChatOpen}
+          onToggle={toggleChat}
+          player={state.player}
+          currentTopic={state.activeTopic}
+        />
+      )}
     </div>
   );
 };
 
 const styles: Record<string, React.CSSProperties> = {
   app: {
-    minHeight: '100vh',
+    position: 'fixed',
+    inset: 0,
     overflow: 'hidden',
     background: 'var(--bg-primary)',
   },
+  gameContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    transition: 'margin-right 0.3s ease',
+  },
   loadingContainer: {
-    minHeight: '100vh',
+    position: 'fixed',
+    inset: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

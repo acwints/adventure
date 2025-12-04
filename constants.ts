@@ -106,3 +106,88 @@ export const LEVEL_TITLES: Record<number, string> = {
   40: 'Master Explorer',
   50: 'Legendary Scholar',
 };
+
+// Random Portal configuration
+export const RANDOM_PORTAL = {
+  id: 'random_portal',
+  name: 'Mystery Portal',
+  description: 'Step through the swirling vortex to embark on a random adventure across any realm.',
+  emoji: '🌀',
+  color: '#a855f7',
+};
+
+// Dummy online players for MMO feel
+export const DUMMY_PLAYERS = [
+  {
+    id: 'player_luna',
+    displayName: 'Luna',
+    avatar: '🧙‍♀️',
+    color: '#ec4899',
+    level: 12,
+    title: 'Arcane Scholar',
+  },
+  {
+    id: 'player_atlas',
+    displayName: 'Atlas',
+    avatar: '🤖',
+    color: '#06b6d4',
+    level: 8,
+    title: 'Tech Pioneer',
+  },
+  {
+    id: 'player_ember',
+    displayName: 'Ember',
+    avatar: '🐉',
+    color: '#f97316',
+    level: 15,
+    title: 'Dragon Sage',
+  },
+  {
+    id: 'player_sage',
+    displayName: 'Sage',
+    avatar: '🧝',
+    color: '#10b981',
+    level: 22,
+    title: 'Nature Warden',
+  },
+  {
+    id: 'player_nova',
+    displayName: 'Nova',
+    avatar: '👨‍🚀',
+    color: '#6366f1',
+    level: 18,
+    title: 'Star Navigator',
+  },
+  {
+    id: 'player_rex',
+    displayName: 'Rex',
+    avatar: '🦖',
+    color: '#d97706',
+    level: 5,
+    title: 'Fossil Hunter',
+  },
+  {
+    id: 'player_coral',
+    displayName: 'Coral',
+    avatar: '🧜‍♀️',
+    color: '#14b8a6',
+    level: 11,
+    title: 'Ocean Explorer',
+  },
+];
+
+// Chat system prompts
+export const CHAT_SYSTEM_PROMPT = `You are a friendly and knowledgeable guide in the Adventure AI learning game. 
+You help players learn about various topics in an engaging, fantasy-themed way.
+Keep responses concise (2-3 paragraphs max) and educational.
+Use adventure/fantasy metaphors when explaining concepts.
+If asked about something unrelated to learning, gently redirect to educational topics.`;
+
+export const CHAT_WELCOME_MESSAGE = `Welcome, brave adventurer! 🗺️
+
+I'm your guide through the realms of knowledge. Ask me anything about:
+• The topics you're exploring
+• How to navigate the world
+• Questions about your current quest
+
+What would you like to learn about?`;
