@@ -392,12 +392,12 @@ const WorldMap: React.FC<WorldMapProps> = ({
                 {/* Themed decorations */}
                 {renderDecorations(region.id, centerX, centerY, pos.color)}
                 
-                {/* Region node - centered on the icon (60px icon + 8px padding each side = 76px total width) */}
+                {/* Region node - centered on the icon */}
                 <div
                   style={{
                     ...styles.region,
-                    left: centerX - 38,
-                    top: centerY - 38,
+                    left: centerX - 42,
+                    top: centerY - 42,
                     transform: isNearby ? 'scale(1.15)' : 'scale(1)',
                     boxShadow: isNearby 
                       ? `0 0 30px ${pos.color}80, 0 0 60px ${pos.color}40`
