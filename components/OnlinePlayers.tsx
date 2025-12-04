@@ -9,7 +9,7 @@ interface OnlinePlayersProps {
 
 const CHAR_SIZE = 26;
 const ORBIT_RADIUS = 50; // Distance from region center
-const ORBIT_SPEED = 0.0008; // Radians per frame
+const ORBIT_SPEED = 0.0024; // Radians per frame (3x speed)
 
 interface PlayerState {
   id: string;
