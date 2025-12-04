@@ -248,10 +248,8 @@ const WorldMap: React.FC<WorldMapProps> = ({
             left: x - 10,
             top: y - 10,
             fontSize: '1.25rem',
-            opacity: 0.6,
+            opacity: 0.7,
             filter: `drop-shadow(0 0 4px ${color}50)`,
-            animation: `float ${2 + i * 0.3}s ease-in-out infinite`,
-            animationDelay: `${i * 0.2}s`,
             pointerEvents: 'none',
           }}
         >
@@ -259,6 +257,25 @@ const WorldMap: React.FC<WorldMapProps> = ({
         </div>
       );
     });
+  };
+
+  // Render atmosphere/glow for a region
+  const renderAtmosphere = (centerX: number, centerY: number, color: string) => {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          left: centerX - 120,
+          top: centerY - 120,
+          width: 240,
+          height: 240,
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${color}25 0%, ${color}10 40%, transparent 70%)`,
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+    );
   };
 
   return (
@@ -361,6 +378,9 @@ const WorldMap: React.FC<WorldMapProps> = ({
             
             return (
               <React.Fragment key={region.id}>
+                {/* Colored atmosphere/glow */}
+                {renderAtmosphere(centerX, centerY, pos.color)}
+                
                 {/* Themed decorations */}
                 {renderDecorations(region.id, centerX, centerY, pos.color)}
                 
