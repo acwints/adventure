@@ -16,18 +16,53 @@ const CHAR_SIZE = 32;
 const MOVE_SPEED = 4;
 const INTERACTION_DISTANCE = 60;
 
-// Region positions as percentages of map size
-const REGION_POSITIONS: Record<string, { xPct: number; yPct: number; emoji: string; color: string }> = {
-  'history_peaks': { xPct: 0.12, yPct: 0.18, emoji: '🏛️', color: '#f59e0b' },
-  'nature_grove': { xPct: 0.85, yPct: 0.15, emoji: '🌿', color: '#10b981' },
-  'cosmic_observatory': { xPct: 0.50, yPct: 0.10, emoji: '🔭', color: '#6366f1' },
-  'tech_citadel': { xPct: 0.88, yPct: 0.55, emoji: '⚡', color: '#06b6d4' },
-  'ancient_fossils': { xPct: 0.15, yPct: 0.60, emoji: '🦴', color: '#d97706' },
-  'elemental_forge': { xPct: 0.50, yPct: 0.72, emoji: '🌋', color: '#ef4444' },
-  'mystery_depths': { xPct: 0.32, yPct: 0.85, emoji: '🐙', color: '#8b5cf6' },
-  'mind_sanctuary': { xPct: 0.78, yPct: 0.82, emoji: '🧠', color: '#ec4899' },
-  'random_portal': { xPct: 0.50, yPct: 0.42, emoji: '🌀', color: '#a855f7' },
+// Circle layout constants
+const CIRCLE_RADIUS = 0.32; // Radius as percentage of smaller dimension
+const CENTER_X = 0.5;
+const CENTER_Y = 0.5;
+
+// Themed decorations for each region
+const REGION_DECORATIONS: Record<string, string[]> = {
+  'history_peaks': ['🏛️', '📜', '⚔️', '👑', '🏺'],
+  'nature_grove': ['🌳', '🌲', '🦋', '🌸', '🍃', '🐦'],
+  'cosmic_observatory': ['⭐', '🌟', '✨', '💫', '🌙'],
+  'tech_citadel': ['💻', '🔌', '⚡', '🤖', '📡'],
+  'ancient_fossils': ['🦴', '🦕', '🦖', '🐚', '💎'],
+  'elemental_forge': ['🔥', '🌋', '💨', '🌊', '⚡'],
+  'mystery_depths': ['🐙', '🐠', '🐟', '🦑', '🫧', '🐚'],
+  'mind_sanctuary': ['🧠', '💭', '✨', '🔮', '💫'],
 };
+
+// Calculate positions in a circle
+const getCirclePosition = (index: number, total: number) => {
+  const angle = (index / total) * Math.PI * 2 - Math.PI / 2; // Start from top
+  return {
+    xPct: CENTER_X + Math.cos(angle) * CIRCLE_RADIUS,
+    yPct: CENTER_Y + Math.sin(angle) * CIRCLE_RADIUS,
+  };
+};
+
+// Region visual data
+const REGION_VISUALS: Record<string, { emoji: string; color: string }> = {
+  'history_peaks': { emoji: '🏛️', color: '#f59e0b' },
+  'nature_grove': { emoji: '🌿', color: '#10b981' },
+  'cosmic_observatory': { emoji: '🔭', color: '#6366f1' },
+  'tech_citadel': { emoji: '⚡', color: '#06b6d4' },
+  'ancient_fossils': { emoji: '🦴', color: '#d97706' },
+  'elemental_forge': { emoji: '🌋', color: '#ef4444' },
+  'mystery_depths': { emoji: '🐙', color: '#8b5cf6' },
+  'mind_sanctuary': { emoji: '🧠', color: '#ec4899' },
+};
+
+// Build REGION_POSITIONS dynamically in a circle
+const REGION_POSITIONS: Record<string, { xPct: number; yPct: number; emoji: string; color: string }> = {};
+MAP_REGIONS.forEach((region, index) => {
+  const pos = getCirclePosition(index, MAP_REGIONS.length);
+  const visual = REGION_VISUALS[region.id] || { emoji: '❓', color: '#666' };
+  REGION_POSITIONS[region.id] = { ...pos, ...visual };
+});
+// Add portal at center
+REGION_POSITIONS['random_portal'] = { xPct: CENTER_X, yPct: CENTER_Y, emoji: '🌀', color: '#a855f7' };
 
 const WorldMap: React.FC<WorldMapProps> = ({ 
   player, 
@@ -195,6 +230,37 @@ const WorldMap: React.FC<WorldMapProps> = ({
 
   const charPixelPos = getPixelPos(charPos.x, charPos.y);
 
+  // Render themed decorations around a region
+  const renderDecorations = (regionId: string, centerX: number, centerY: number, color: string) => {
+    const decorations = REGION_DECORATIONS[regionId] || [];
+    const decorRadius = 70; // Distance from center
+    
+    return decorations.map((emoji, i) => {
+      const angle = (i / decorations.length) * Math.PI * 2;
+      const x = centerX + Math.cos(angle) * decorRadius;
+      const y = centerY + Math.sin(angle) * decorRadius;
+      
+      return (
+        <div
+          key={`${regionId}-deco-${i}`}
+          style={{
+            position: 'absolute',
+            left: x - 10,
+            top: y - 10,
+            fontSize: '1.25rem',
+            opacity: 0.6,
+            filter: `drop-shadow(0 0 4px ${color}50)`,
+            animation: `float ${2 + i * 0.3}s ease-in-out infinite`,
+            animationDelay: `${i * 0.2}s`,
+            pointerEvents: 'none',
+          }}
+        >
+          {emoji}
+        </div>
+      );
+    });
+  };
+
   return (
     <div style={styles.container}>
       {/* Header bar */}
@@ -248,52 +314,21 @@ const WorldMap: React.FC<WorldMapProps> = ({
           <div style={styles.nebula2} />
           <div style={styles.nebula3} />
           
-          {/* Connection lines between regions */}
+          {/* Circle outline for classroom ring */}
           {mapSize.width > 0 && (
             <svg style={styles.connectionsSvg}>
-              {MAP_REGIONS.map((region, i) => {
-                const next = MAP_REGIONS[(i + 1) % MAP_REGIONS.length];
-                const pos1 = REGION_POSITIONS[region.id];
-                const pos2 = REGION_POSITIONS[next.id];
-                if (!pos1 || !pos2) return null;
-                
-                return (
-                  <line
-                    key={`line-${i}`}
-                    x1={pos1.xPct * mapSize.width}
-                    y1={pos1.yPct * mapSize.height}
-                    x2={pos2.xPct * mapSize.width}
-                    y2={pos2.yPct * mapSize.height}
-                    stroke="rgba(99, 102, 241, 0.15)"
-                    strokeWidth="2"
-                    strokeDasharray="8 8"
-                  />
-                );
-              })}
-              {/* Lines to random portal */}
-              {[0, 2, 4, 6].map((i) => {
-                const region = MAP_REGIONS[i];
-                const pos1 = REGION_POSITIONS[region.id];
-                const portalPos = REGION_POSITIONS['random_portal'];
-                if (!pos1 || !portalPos) return null;
-                
-                return (
-                  <line
-                    key={`portal-line-${i}`}
-                    x1={pos1.xPct * mapSize.width}
-                    y1={pos1.yPct * mapSize.height}
-                    x2={portalPos.xPct * mapSize.width}
-                    y2={portalPos.yPct * mapSize.height}
-                    stroke="rgba(168, 85, 247, 0.1)"
-                    strokeWidth="1"
-                    strokeDasharray="4 4"
-                  />
-                );
-              })}
+              <circle
+                cx={CENTER_X * mapSize.width}
+                cy={CENTER_Y * mapSize.height}
+                r={CIRCLE_RADIUS * Math.min(mapSize.width, mapSize.height)}
+                fill="none"
+                stroke="rgba(99, 102, 241, 0.1)"
+                strokeWidth="2"
+              />
             </svg>
           )}
 
-          {/* Random Portal */}
+          {/* Random Portal at center */}
           {mapSize.width > 0 && (
             <div
               style={{
@@ -313,7 +348,7 @@ const WorldMap: React.FC<WorldMapProps> = ({
             </div>
           )}
 
-          {/* Regions */}
+          {/* Regions with decorations */}
           {mapSize.width > 0 && MAP_REGIONS.map((region) => {
             const pos = REGION_POSITIONS[region.id];
             if (!pos) return null;
@@ -321,50 +356,57 @@ const WorldMap: React.FC<WorldMapProps> = ({
             const completion = getRegionCompletion(region);
             const isNearby = nearbyRegion?.id === region.id;
             const isComplete = completion === region.topics.length;
+            const centerX = pos.xPct * mapSize.width;
+            const centerY = pos.yPct * mapSize.height;
             
             return (
-              <div
-                key={region.id}
-                style={{
-                  ...styles.region,
-                  left: pos.xPct * mapSize.width - 30,
-                  top: pos.yPct * mapSize.height - 30,
-                  transform: isNearby ? 'scale(1.15)' : 'scale(1)',
-                  boxShadow: isNearby 
-                    ? `0 0 30px ${pos.color}80, 0 0 60px ${pos.color}40`
-                    : `0 0 20px ${pos.color}30`,
-                }}
-                onClick={() => onSelectRegion(region)}
-              >
-                <div 
-                  style={{ 
-                    ...styles.regionIcon,
-                    borderColor: pos.color,
-                    background: `linear-gradient(135deg, ${pos.color}20 0%, transparent 100%)`,
+              <React.Fragment key={region.id}>
+                {/* Themed decorations */}
+                {renderDecorations(region.id, centerX, centerY, pos.color)}
+                
+                {/* Region node */}
+                <div
+                  style={{
+                    ...styles.region,
+                    left: centerX - 30,
+                    top: centerY - 30,
+                    transform: isNearby ? 'scale(1.15)' : 'scale(1)',
+                    boxShadow: isNearby 
+                      ? `0 0 30px ${pos.color}80, 0 0 60px ${pos.color}40`
+                      : `0 0 20px ${pos.color}30`,
                   }}
+                  onClick={() => onSelectRegion(region)}
                 >
-                  <span style={{ fontSize: '1.5rem' }}>{pos.emoji}</span>
+                  <div 
+                    style={{ 
+                      ...styles.regionIcon,
+                      borderColor: pos.color,
+                      background: `linear-gradient(135deg, ${pos.color}20 0%, transparent 100%)`,
+                    }}
+                  >
+                    <span style={{ fontSize: '1.5rem' }}>{pos.emoji}</span>
+                  </div>
+                  
+                  <div style={styles.regionName}>{region.name}</div>
+                  
+                  {/* Progress dots */}
+                  <div style={styles.progressDots}>
+                    {region.topics.map((_, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          ...styles.dot,
+                          background: i < completion ? pos.color : 'var(--border-color)',
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  {isComplete && (
+                    <div style={styles.completeBadge}>✓</div>
+                  )}
                 </div>
-                
-                <div style={styles.regionName}>{region.name}</div>
-                
-                {/* Progress dots */}
-                <div style={styles.progressDots}>
-                  {region.topics.map((_, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        ...styles.dot,
-                        background: i < completion ? pos.color : 'var(--border-color)',
-                      }}
-                    />
-                  ))}
-                </div>
-                
-                {isComplete && (
-                  <div style={styles.completeBadge}>✓</div>
-                )}
-              </div>
+              </React.Fragment>
             );
           })}
 
@@ -650,6 +692,7 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
     borderRadius: 'var(--radius-lg)',
     padding: '0.5rem',
+    zIndex: 6,
   },
   regionIcon: {
     width: '60px',
