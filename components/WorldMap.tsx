@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { MapRegion, GamePlayer } from '../types';
-import { MAP_REGIONS, RANDOM_PORTAL } from '../constants';
+import { MAP_REGIONS, RANDOM_PORTAL, DUMMY_PLAYERS } from '../constants';
 import { hasCompletedTopic, xpProgress, currentLevelXp, xpToNextLevel } from '../services/gameService';
 import OnlinePlayers from './OnlinePlayers';
 
@@ -224,7 +224,7 @@ const WorldMap: React.FC<WorldMapProps> = ({
         {/* Online players count */}
         <div style={styles.onlineCount}>
           <span style={styles.onlineDot} />
-          <span>7 explorers online</span>
+          <span>{DUMMY_PLAYERS.filter(p => p.isOnline).length + 1} explorers online</span>
         </div>
 
         <div style={styles.headerActions}>
@@ -370,7 +370,11 @@ const WorldMap: React.FC<WorldMapProps> = ({
 
           {/* Online Players */}
           {mapSize.width > 0 && (
-            <OnlinePlayers mapWidth={mapSize.width} mapHeight={mapSize.height} />
+            <OnlinePlayers 
+              mapWidth={mapSize.width} 
+              mapHeight={mapSize.height} 
+              regionPositions={REGION_POSITIONS}
+            />
           )}
 
           {/* Player character */}

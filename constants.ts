@@ -116,7 +116,7 @@ export const RANDOM_PORTAL = {
   color: '#a855f7',
 };
 
-// Dummy online players for MMO feel
+// Dummy online players for MMO feel - each assigned to a classroom/region
 export const DUMMY_PLAYERS = [
   {
     id: 'player_luna',
@@ -125,6 +125,11 @@ export const DUMMY_PLAYERS = [
     color: '#ec4899',
     level: 12,
     title: 'Arcane Scholar',
+    regionId: 'history_peaks',
+    currentQuest: 'The Roman Empire',
+    isOnline: true,
+    isFriend: true,
+    totalXp: 2450,
   },
   {
     id: 'player_atlas',
@@ -133,6 +138,11 @@ export const DUMMY_PLAYERS = [
     color: '#06b6d4',
     level: 8,
     title: 'Tech Pioneer',
+    regionId: 'tech_citadel',
+    currentQuest: 'Artificial Intelligence',
+    isOnline: true,
+    isFriend: true,
+    totalXp: 1580,
   },
   {
     id: 'player_ember',
@@ -141,6 +151,11 @@ export const DUMMY_PLAYERS = [
     color: '#f97316',
     level: 15,
     title: 'Dragon Sage',
+    regionId: 'elemental_forge',
+    currentQuest: 'Volcanoes',
+    isOnline: true,
+    isFriend: false,
+    totalXp: 3200,
   },
   {
     id: 'player_sage',
@@ -149,6 +164,11 @@ export const DUMMY_PLAYERS = [
     color: '#10b981',
     level: 22,
     title: 'Nature Warden',
+    regionId: 'nature_grove',
+    currentQuest: 'Rainforest Ecosystems',
+    isOnline: true,
+    isFriend: true,
+    totalXp: 5100,
   },
   {
     id: 'player_nova',
@@ -157,6 +177,11 @@ export const DUMMY_PLAYERS = [
     color: '#6366f1',
     level: 18,
     title: 'Star Navigator',
+    regionId: 'cosmic_observatory',
+    currentQuest: 'Black Holes',
+    isOnline: true,
+    isFriend: false,
+    totalXp: 4200,
   },
   {
     id: 'player_rex',
@@ -165,6 +190,11 @@ export const DUMMY_PLAYERS = [
     color: '#d97706',
     level: 5,
     title: 'Fossil Hunter',
+    regionId: 'ancient_fossils',
+    currentQuest: 'Dinosaurs',
+    isOnline: false,
+    isFriend: true,
+    totalXp: 890,
   },
   {
     id: 'player_coral',
@@ -173,6 +203,24 @@ export const DUMMY_PLAYERS = [
     color: '#14b8a6',
     level: 11,
     title: 'Ocean Explorer',
+    regionId: 'mystery_depths',
+    currentQuest: 'Bioluminescence',
+    isOnline: true,
+    isFriend: false,
+    totalXp: 2100,
+  },
+  {
+    id: 'player_mind',
+    displayName: 'Aria',
+    avatar: '🔮',
+    color: '#a855f7',
+    level: 14,
+    title: 'Mind Reader',
+    regionId: 'mind_sanctuary',
+    currentQuest: 'Psychology of Dreams',
+    isOnline: true,
+    isFriend: true,
+    totalXp: 2900,
   },
 ];
 

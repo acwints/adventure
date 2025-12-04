@@ -8,6 +8,7 @@ import QuizView from './components/QuizView';
 import VictoryScreen from './components/VictoryScreen';
 import AdventureCollection from './components/AdventureCollection';
 import ChatPanel from './components/ChatPanel';
+import SocialPanel from './components/SocialPanel';
 import { LoadingSpinner } from './components/Icons';
 import { useGameState } from './hooks/useGameState';
 import { generateLesson, generateQuiz } from './services/geminiService';
@@ -16,6 +17,7 @@ import { MAP_REGIONS } from './constants';
 const App: React.FC = () => {
   const { state, actions } = useGameState();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isSocialOpen, setIsSocialOpen] = useState(false);
   
   // Track if we're currently fetching to prevent duplicate requests
   const isFetchingRef = useRef(false);
@@ -89,6 +91,11 @@ const App: React.FC = () => {
     setIsChatOpen(prev => !prev);
   }, []);
 
+  // Toggle social panel
+  const toggleSocial = useCallback(() => {
+    setIsSocialOpen(prev => !prev);
+  }, []);
+
   // Render loading state
   if (state.authLoading) {
     return (
@@ -101,8 +108,8 @@ const App: React.FC = () => {
     );
   }
 
-  // Check if we should show the chat panel (only on world_map view)
-  const showChat = state.currentView === 'world_map' && state.player;
+  // Check if we should show the panels (only on world_map view)
+  const showPanels = state.currentView === 'world_map' && state.player;
 
   // Render based on current game view
   const renderGameView = () => {
@@ -239,16 +246,26 @@ const App: React.FC = () => {
 
   return (
     <div style={styles.app}>
+      {/* Social panel (left) - only show when on world map */}
+      {showPanels && (
+        <SocialPanel
+          isOpen={isSocialOpen}
+          onToggle={toggleSocial}
+          player={state.player}
+        />
+      )}
+
       {/* Main game content */}
       <div style={{
         ...styles.gameContainer,
-        marginRight: showChat && isChatOpen ? '340px' : '0',
+        marginLeft: showPanels && isSocialOpen ? '300px' : '0',
+        marginRight: showPanels && isChatOpen ? '340px' : '0',
       }}>
         {renderGameView()}
       </div>
 
-      {/* Chat panel - only show when on world map */}
-      {showChat && (
+      {/* Chat panel (right) - only show when on world map */}
+      {showPanels && (
         <ChatPanel
           isOpen={isChatOpen}
           onToggle={toggleChat}
@@ -273,7 +290,7 @@ const styles: Record<string, React.CSSProperties> = {
     left: 0,
     right: 0,
     bottom: 0,
-    transition: 'margin-right 0.3s ease',
+    transition: 'margin-left 0.3s ease, margin-right 0.3s ease',
   },
   loadingContainer: {
     position: 'fixed',

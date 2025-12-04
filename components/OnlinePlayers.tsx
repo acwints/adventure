@@ -1,89 +1,80 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { OnlinePlayer } from '../types';
 import { DUMMY_PLAYERS } from '../constants';
 
 interface OnlinePlayersProps {
   mapWidth: number;
   mapHeight: number;
+  regionPositions: Record<string, { xPct: number; yPct: number }>;
 }
 
-const CHAR_SIZE = 28;
-const MOVE_SPEED = 1.5;
-const DIRECTION_CHANGE_INTERVAL = 2000; // ms
-const IDLE_CHANCE = 0.3; // 30% chance to idle
+const CHAR_SIZE = 26;
 
-const OnlinePlayers: React.FC<OnlinePlayersProps> = ({ mapWidth, mapHeight }) => {
-  const [players, setPlayers] = useState<OnlinePlayer[]>([]);
+// Players do small idle movements around their region
+const IDLE_RADIUS = 25;
+const IDLE_SPEED = 0.3;
+
+interface PlayerState {
+  id: string;
+  displayName: string;
+  avatar: string;
+  color: string;
+  level: number;
+  title: string;
+  regionId: string;
+  currentQuest: string;
+  isOnline: boolean;
+  // Position offset from region center
+  offsetX: number;
+  offsetY: number;
+  targetOffsetX: number;
+  targetOffsetY: number;
+}
+
+const OnlinePlayers: React.FC<OnlinePlayersProps> = ({ mapWidth, mapHeight, regionPositions }) => {
+  const [players, setPlayers] = useState<PlayerState[]>([]);
   const [hoveredPlayer, setHoveredPlayer] = useState<string | null>(null);
   const animationFrame = useRef<number>();
-  const directionTimers = useRef<Map<string, number>>(new Map());
 
-  // Initialize players with random positions
+  // Initialize players at their assigned regions
   useEffect(() => {
-    const initialPlayers: OnlinePlayer[] = DUMMY_PLAYERS.map((p, index) => ({
-      ...p,
-      x: 100 + (index * (mapWidth - 200) / DUMMY_PLAYERS.length) + Math.random() * 50,
-      y: 100 + Math.random() * (mapHeight - 200),
-      direction: (['up', 'down', 'left', 'right'] as const)[Math.floor(Math.random() * 4)],
-      isMoving: Math.random() > IDLE_CHANCE,
-    }));
-    setPlayers(initialPlayers);
-  }, [mapWidth, mapHeight]);
-
-  // Random direction changes
-  useEffect(() => {
-    const changeDirections = () => {
-      setPlayers(prev => prev.map(player => {
-        const now = Date.now();
-        const lastChange = directionTimers.current.get(player.id) || 0;
-        
-        if (now - lastChange > DIRECTION_CHANGE_INTERVAL) {
-          directionTimers.current.set(player.id, now);
-          const newDirection = (['up', 'down', 'left', 'right'] as const)[
-            Math.floor(Math.random() * 4)
-          ];
-          const willMove = Math.random() > IDLE_CHANCE;
-          return { ...player, direction: newDirection, isMoving: willMove };
-        }
-        return player;
+    const initialPlayers: PlayerState[] = DUMMY_PLAYERS
+      .filter(p => p.isOnline) // Only show online players on the map
+      .map((p) => ({
+        ...p,
+        offsetX: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+        offsetY: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+        targetOffsetX: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+        targetOffsetY: (Math.random() - 0.5) * IDLE_RADIUS * 2,
       }));
+    setPlayers(initialPlayers);
+  }, []);
+
+  // Periodically set new target positions for idle movement
+  useEffect(() => {
+    const updateTargets = () => {
+      setPlayers(prev => prev.map(player => ({
+        ...player,
+        targetOffsetX: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+        targetOffsetY: (Math.random() - 0.5) * IDLE_RADIUS * 2,
+      })));
     };
 
-    const interval = setInterval(changeDirections, 500);
+    const interval = setInterval(updateTargets, 3000);
     return () => clearInterval(interval);
   }, []);
 
-  // Movement animation loop
+  // Smooth movement animation toward target
   useEffect(() => {
     const gameLoop = () => {
       setPlayers(prev => prev.map(player => {
-        if (!player.isMoving) return player;
-
-        let dx = 0;
-        let dy = 0;
-
-        switch (player.direction) {
-          case 'up': dy = -MOVE_SPEED; break;
-          case 'down': dy = MOVE_SPEED; break;
-          case 'left': dx = -MOVE_SPEED; break;
-          case 'right': dx = MOVE_SPEED; break;
-        }
-
-        // Calculate new position with bounds
-        const newX = Math.max(30, Math.min(mapWidth - 30, player.x + dx));
-        const newY = Math.max(30, Math.min(mapHeight - 30, player.y + dy));
-
-        // If hitting boundary, change direction
-        if (newX === player.x && dx !== 0) {
-          const newDir = dx > 0 ? 'left' : 'right';
-          return { ...player, direction: newDir as OnlinePlayer['direction'] };
-        }
-        if (newY === player.y && dy !== 0) {
-          const newDir = dy > 0 ? 'up' : 'down';
-          return { ...player, direction: newDir as OnlinePlayer['direction'] };
-        }
-
-        return { ...player, x: newX, y: newY };
+        const dx = player.targetOffsetX - player.offsetX;
+        const dy = player.targetOffsetY - player.offsetY;
+        
+        return {
+          ...player,
+          offsetX: player.offsetX + dx * IDLE_SPEED * 0.05,
+          offsetY: player.offsetY + dy * IDLE_SPEED * 0.05,
+        };
       }));
 
       animationFrame.current = requestAnimationFrame(gameLoop);
@@ -93,59 +84,74 @@ const OnlinePlayers: React.FC<OnlinePlayersProps> = ({ mapWidth, mapHeight }) =>
     return () => {
       if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
     };
-  }, [mapWidth, mapHeight]);
+  }, []);
 
   if (mapWidth === 0 || mapHeight === 0) return null;
 
   return (
     <>
-      {players.map((player) => (
-        <div
-          key={player.id}
-          style={{
-            ...styles.playerContainer,
-            left: player.x - CHAR_SIZE / 2,
-            top: player.y - CHAR_SIZE / 2,
-            transform: player.isMoving ? 'translateY(-1px)' : 'translateY(0)',
-          }}
-          onMouseEnter={() => setHoveredPlayer(player.id)}
-          onMouseLeave={() => setHoveredPlayer(null)}
-        >
-          {/* Player avatar */}
-          <div 
+      {players.map((player) => {
+        const regionPos = regionPositions[player.regionId];
+        if (!regionPos) return null;
+
+        const baseX = regionPos.xPct * mapWidth;
+        const baseY = regionPos.yPct * mapHeight;
+
+        return (
+          <div
+            key={player.id}
             style={{
-              ...styles.avatar,
-              borderColor: player.color,
-              boxShadow: `0 0 10px ${player.color}40`,
+              ...styles.playerContainer,
+              left: baseX + player.offsetX - CHAR_SIZE / 2,
+              top: baseY + player.offsetY - CHAR_SIZE / 2 + 45, // Offset below region icon
             }}
+            onMouseEnter={() => setHoveredPlayer(player.id)}
+            onMouseLeave={() => setHoveredPlayer(null)}
           >
-            <span style={styles.avatarEmoji}>{player.avatar}</span>
-          </div>
-
-          {/* Shadow */}
-          <div style={styles.shadow} />
-
-          {/* Name tooltip on hover */}
-          {hoveredPlayer === player.id && (
-            <div style={styles.tooltip}>
-              <div style={styles.tooltipName}>{player.displayName}</div>
-              <div style={styles.tooltipInfo}>
-                Lv.{player.level} • {player.title}
-              </div>
-            </div>
-          )}
-
-          {/* Moving indicator */}
-          {player.isMoving && (
+            {/* Player avatar */}
             <div 
               style={{
-                ...styles.movingDot,
-                background: player.color,
-              }} 
-            />
-          )}
-        </div>
-      ))}
+                ...styles.avatar,
+                borderColor: player.color,
+                boxShadow: `0 0 12px ${player.color}50`,
+              }}
+            >
+              <span style={styles.avatarEmoji}>{player.avatar}</span>
+            </div>
+
+            {/* Shadow */}
+            <div style={styles.shadow} />
+
+            {/* Name label (always visible) */}
+            <div style={styles.nameLabel}>{player.displayName}</div>
+
+            {/* Detailed tooltip on hover */}
+            {hoveredPlayer === player.id && (
+              <div style={styles.tooltip}>
+                <div style={styles.tooltipHeader}>
+                  <span style={{ ...styles.tooltipAvatar, borderColor: player.color }}>
+                    {player.avatar}
+                  </span>
+                  <div>
+                    <div style={styles.tooltipName}>{player.displayName}</div>
+                    <div style={styles.tooltipLevel}>Lv.{player.level} • {player.title}</div>
+                  </div>
+                </div>
+                <div style={styles.tooltipDivider} />
+                <div style={styles.tooltipQuest}>
+                  <span style={styles.questLabel}>Studying:</span>
+                  <span style={styles.questName}>{player.currentQuest}</span>
+                </div>
+              </div>
+            )}
+
+            {/* "In class" indicator */}
+            <div style={styles.studyingIndicator}>
+              <span style={styles.bookIcon}>📖</span>
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 };
@@ -168,10 +174,10 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'var(--bg-card)',
     borderRadius: '50%',
     border: '2px solid',
-    transition: 'box-shadow 0.2s ease',
+    transition: 'box-shadow 0.2s ease, transform 0.2s ease',
   },
   avatarEmoji: {
-    fontSize: '1rem',
+    fontSize: '0.875rem',
     lineHeight: 1,
   },
   shadow: {
@@ -179,48 +185,100 @@ const styles: Record<string, React.CSSProperties> = {
     bottom: '-3px',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: '16px',
+    width: '14px',
     height: '4px',
     background: 'rgba(0,0,0,0.25)',
     borderRadius: '50%',
     filter: 'blur(1px)',
   },
-  tooltip: {
+  nameLabel: {
     position: 'absolute',
-    bottom: 'calc(100% + 8px)',
+    top: 'calc(100% + 2px)',
     left: '50%',
     transform: 'translateX(-50%)',
-    padding: '0.5rem 0.75rem',
+    fontSize: '0.5625rem',
+    fontWeight: 600,
+    color: 'var(--text-secondary)',
+    whiteSpace: 'nowrap',
+    textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+  },
+  tooltip: {
+    position: 'absolute',
+    bottom: 'calc(100% + 12px)',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    padding: '0.75rem',
     background: 'var(--bg-card)',
     border: '1px solid var(--border-color)',
     borderRadius: 'var(--radius-md)',
     whiteSpace: 'nowrap',
-    zIndex: 20,
+    zIndex: 30,
     animation: 'fadeIn 0.15s ease-out',
     boxShadow: 'var(--shadow-lg)',
+    minWidth: '160px',
+  },
+  tooltipHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  },
+  tooltipAvatar: {
+    width: '32px',
+    height: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--bg-tertiary)',
+    borderRadius: '50%',
+    border: '2px solid',
+    fontSize: '1rem',
   },
   tooltipName: {
     fontWeight: 600,
     fontSize: '0.8125rem',
     color: 'var(--text-primary)',
-    textAlign: 'center',
   },
-  tooltipInfo: {
+  tooltipLevel: {
     fontSize: '0.6875rem',
     color: 'var(--text-muted)',
-    textAlign: 'center',
-    marginTop: '0.125rem',
   },
-  movingDot: {
+  tooltipDivider: {
+    height: '1px',
+    background: 'var(--border-color)',
+    margin: '0.5rem 0',
+  },
+  tooltipQuest: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.125rem',
+  },
+  questLabel: {
+    fontSize: '0.625rem',
+    color: 'var(--text-muted)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+  },
+  questName: {
+    fontSize: '0.75rem',
+    color: 'var(--accent-tertiary)',
+    fontWeight: 500,
+  },
+  studyingIndicator: {
     position: 'absolute',
-    top: '-2px',
-    right: '-2px',
-    width: '6px',
-    height: '6px',
+    top: '-4px',
+    right: '-4px',
+    width: '14px',
+    height: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--bg-card)',
     borderRadius: '50%',
-    animation: 'pulse 1s ease-in-out infinite',
+    border: '1px solid var(--border-color)',
+  },
+  bookIcon: {
+    fontSize: '0.5rem',
   },
 };
 
 export default OnlinePlayers;
-
