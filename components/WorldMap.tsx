@@ -396,8 +396,8 @@ const WorldMap: React.FC<WorldMapProps> = ({
                 <div
                   style={{
                     ...styles.region,
-                    left: centerX - 42,
-                    top: centerY - 42,
+                    left: centerX - 45,
+                    top: centerY - 45,
                     transform: isNearby ? 'scale(1.15)' : 'scale(1)',
                     boxShadow: isNearby 
                       ? `0 0 30px ${pos.color}80, 0 0 60px ${pos.color}40`
