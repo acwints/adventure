@@ -12,7 +12,7 @@ interface WorldMapProps {
   onStartRandomQuest: () => void;
 }
 
-const CHAR_SIZE = 32;
+const CHAR_SIZE = 48;
 const MOVE_SPEED = 4;
 const INTERACTION_DISTANCE = 60;
 
@@ -766,20 +766,20 @@ const styles: Record<string, React.CSSProperties> = {
     pointerEvents: 'none',
   },
   characterBody: {
-    fontSize: '1.75rem',
+    fontSize: '2.5rem',
     lineHeight: 1,
     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))',
   },
   characterShadow: {
     position: 'absolute',
-    bottom: '-4px',
+    bottom: '-6px',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: '20px',
-    height: '6px',
+    width: '28px',
+    height: '8px',
     background: 'rgba(0,0,0,0.3)',
     borderRadius: '50%',
-    filter: 'blur(2px)',
+    filter: 'blur(3px)',
   },
   youIndicator: {
     position: 'absolute',

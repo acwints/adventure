@@ -7,7 +7,7 @@ interface OnlinePlayersProps {
   regionPositions: Record<string, { xPct: number; yPct: number }>;
 }
 
-const CHAR_SIZE = 26;
+const CHAR_SIZE = 40;
 const ORBIT_RADIUS = 50; // Distance from region center
 const ORBIT_SPEED = 0.0024; // Radians per frame (3x speed)
 
@@ -155,19 +155,19 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'box-shadow 0.2s ease, transform 0.2s ease',
   },
   avatarEmoji: {
-    fontSize: '0.875rem',
+    fontSize: '1.25rem',
     lineHeight: 1,
   },
   shadow: {
     position: 'absolute',
-    bottom: '-3px',
+    bottom: '-4px',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: '14px',
-    height: '4px',
+    width: '22px',
+    height: '6px',
     background: 'rgba(0,0,0,0.25)',
     borderRadius: '50%',
-    filter: 'blur(1px)',
+    filter: 'blur(2px)',
   },
   nameLabel: {
     position: 'absolute',
