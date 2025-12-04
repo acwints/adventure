@@ -115,9 +115,6 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, isLoading, error, onBack
         </form>
 
         {/* Footer */}
-        <p style={styles.footerText}>
-          Demo credentials: <code style={styles.code}>andrew_winter@berkeley.edu</code> / <code style={styles.code}>adventure</code>
-        </p>
       </div>
     </div>
   );
